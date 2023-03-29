@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { TableComponents, TableVirtuoso } from 'react-virtuoso';
 import { bisectionData, bisectionDataError } from "../types";
+import { drawerWidth, inputWidth } from "../App";
+import { formatFunc, testFunc } from "../calculators/misc";
 import { functionTypeEnums, methodTypeEnums } from "../enums";
 
 import Avatar from "@mui/material/Avatar"
@@ -19,8 +21,6 @@ import TextField from "@mui/material/TextField";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import calcBisection from "../calculators/bisection";
-import { drawerWidth } from "../App";
-import { randomTableVal } from "../calculators/test";
 import { styled } from '@mui/material/styles';
 
 const ListItem = styled('li')(({ theme }) => ({
@@ -58,6 +58,8 @@ export default function Bisection() {
     if (bisectionData) {
       setData(bisectionData)
     }
+    const showAnswer2 = JSON.parse(localStorage.getItem("rootify--showBisectionAnswer")!)
+    setShowAnswer(showAnswer2);
   }, [])
 
   console.log("Data: ", data)
@@ -87,17 +89,22 @@ export default function Bisection() {
     resetDataErrorToBlank();
 
     setShowAnswer((prev) => {
+      let newState = prev;
       // going to show the answer
       if (!prev) {
         if (verifyInputs(data) === false) {
-          return prev;
+          return newState;
         } else {
-          return !prev;
+          newState = !newState;
+          return newState;
         }
       }
 
       // going to remodify the values
-      return !prev;
+      newState = !newState;
+
+      localStorage.setItem("rootify--showBisectionAnswer", newState+"");
+      return newState;
     })
 
     console.log("clicked solve!: "+showAnswer)
@@ -146,6 +153,12 @@ export default function Bisection() {
       setDataError((prev) => ({...prev, iterations: "Needs to be greater than zero or less than 100"}))
       success = false;
     }
+
+    if (data.funcType === functionTypeEnums.AnyFunction && testFunc(data.customFunc) === false) {
+      setDataError((prev) => ({...prev, customFunc: 'Invalid function'}))
+      success = false;
+    }
+
     return success;
   }
 
@@ -162,6 +175,8 @@ export default function Bisection() {
     })
   }
 
+  console.table(data)
+
   return (
     <Box
       component="main"
@@ -170,123 +185,135 @@ export default function Bisection() {
       <Toolbar />
       <Collapse in={!showAnswer}>
         <Stack spacing={2}>
-        <Item variant="outlined">
-          <Typography variant="h6" color="InfoText">Enter the interval</Typography>
-          <Box
-            component="form"
-            sx={{
-              '& > :not(style)': { m: 1, width: 'auto' },
-            }}
-            autoComplete="off"
-          >
-            <TextField
-              error={dataError.a !== "" && true}
-              helperText={dataError.a !== "" && dataError.a}
-              required
-              name="a"
-              id="input--a"
-              label="Value of a"
-              value={data.a}
-              variant="standard"
-              onChange={handleChange} 
-            />
-            <TextField
-              required
-              error={dataError.b !== "" && true}
-              helperText={dataError.b !== "" && dataError.b}
-              name="b"
-              id="input--b"
-              label="Value of b"
-              value={data.b}
-              variant="standard"
-              onChange={handleChange} 
-            />
-          </Box>          
-        </Item>
-        <Item variant="outlined">
-          <Typography variant="h6" color="InfoText">Choose a function</Typography>
-          <Box
-            component="form"
-            sx={{
-              '& > :not(style)': { m: 1, width: '50ch' },
-            }}
-            autoComplete="off"
-          >
-            <RadioGroup
-              row
-              defaultValue={functionTypeEnums.LogFunction}
+          <Item variant="outlined">
+            <Typography variant="h6" color="InfoText">Enter the interval</Typography>
+            <Box
+              component="form"
+              sx={{
+                '& > :not(style)': { m: 1, width: inputWidth },
+              }}
+              autoComplete="off"
             >
-              <FormControlLabel value="ln(x+1)" control={<Radio name="funcType" value={functionTypeEnums.LogFunction} onChange={handleChange} />} label="ln(x+1)" />
-              <FormControlLabel value="custom" control={<Radio  name="funcType" value={functionTypeEnums.AnyFunction} onChange={handleChange} />} label="Custom" />
-              <Collapse in={data.funcType === functionTypeEnums.AnyFunction}>
-                <TextField
-                  error={dataError.customFunc !== "" && true}
-                  helperText={dataError.customFunc !== "" && dataError.customFunc}
-                  name="customFunc"
-                  fullWidth
-                  id="input--func"
-                  label="Custom Function"
-                  value={data.customFunc}
-                  variant="standard"
-                  onChange={handleChange} 
+              <TextField
+                error={dataError.a !== "" && true}
+                helperText={dataError.a !== "" && dataError.a}
+                required
+                name="a"
+                id="input--a"
+                label="Value of a"
+                value={data.a}
+                variant="standard"
+                onChange={handleChange} 
+              />
+              <TextField
+                required
+                error={dataError.b !== "" && true}
+                helperText={dataError.b !== "" && dataError.b}
+                name="b"
+                id="input--b"
+                label="Value of b"
+                value={data.b}
+                variant="standard"
+                onChange={handleChange} 
+              />
+            </Box>          
+          </Item>
+          <Item variant="outlined">
+            <Typography variant="h6" color="InfoText">Choose a function</Typography>
+            <Box
+              component="form"
+              sx={{
+                '& > :not(style)': { m: 1, width: inputWidth },
+              }}
+              autoComplete="off"
+            >
+              <RadioGroup
+                row
+                onChange={handleChange}
+                value={data.funcType}
+              >
+                <FormControlLabel 
+                  name="funcType"
+                  value={functionTypeEnums.LogFunction}
+                  control={<Radio/>} 
+                  label="ln(x+1)" 
                 />
-              </Collapse>
-            </RadioGroup>
-            
-          </Box>         
-        </Item>
-        <Item variant="outlined">
-          <Typography variant="h6" color="InfoText">Enter the error</Typography>
-          <Box
-            component="form"
-            sx={{
-              '& > :not(style)': { m: 1,width: 'auto' },
-            }}
-            autoComplete="off"
-          >
-            <TextField
-              required
-              error={dataError.error !== "" && true}
-              helperText={dataError.error !== "" && dataError.error}
-              name="error"
-              id="input--error"
-              label="Value of the error"
-              value={data.error}
-              variant="standard"
-              onChange={handleChange} 
-            />
-          </Box>         
-        </Item>
-        <Item variant="outlined">
-          <Typography variant="h6" color="InfoText">Enter the maximum number of iterations</Typography>
-          <Box
-            component="form"
-            sx={{
-              '& > :not(style)': { m: 1, width: 'auto' },
-            }}
-            autoComplete="off"
-          >
-            <TextField
-              required
-              error={dataError.iterations !== "" && true}
-              helperText={dataError.iterations !== "" && dataError.iterations}
-              name="iterations"
-              id="input--iterations"
-              label="Max value of iterations"
-              type="number"
-              value={data.iterations}
-              variant="standard"
-              onChange={handleChange} 
-              inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-            />
-          </Box>         
-        </Item>
-      </Stack>
-      <SolveBtn handleClick={toggleShowAnswer} />
+                <FormControlLabel 
+                  name="funcType"
+                  value={functionTypeEnums.AnyFunction} 
+                  control={<Radio/>}
+                  label="Custom" 
+                />
+                <Collapse 
+                  in={data.funcType === functionTypeEnums.AnyFunction} 
+                  orientation="horizontal"
+                >
+                  {data.funcType === functionTypeEnums.AnyFunction && <TextField
+                    error={dataError.customFunc !== "" && true}
+                    helperText={dataError.customFunc !== "" && dataError.customFunc}
+                    name="customFunc"
+                    id="input--func"
+                    label="Format: f(x) = <Function>"
+                    value={data.customFunc}
+                    variant="standard"
+                    onChange={handleChange} 
+                  />}
+                </Collapse>
+              </RadioGroup>
+            </Box>         
+          </Item>
+          <Item variant="outlined">
+            <Typography variant="h6" color="InfoText">Enter the error</Typography>
+            <Box
+              component="form"
+              sx={{
+                '& > :not(style)': { m: 1,width: inputWidth },
+              }}
+              autoComplete="off"
+            >
+              <TextField
+                required
+                error={dataError.error !== "" && true}
+                helperText={dataError.error !== "" && dataError.error}
+                name="error"
+                id="input--error"
+                label="Value of the error"
+                value={data.error}
+                variant="standard"
+                onChange={handleChange} 
+              />
+            </Box>         
+          </Item>
+          <Item variant="outlined">
+            <Typography variant="h6" color="InfoText">Enter the maximum number of iterations</Typography>
+            <Box
+              component="form"
+              sx={{
+                '& > :not(style)': { m: 1, width: inputWidth },
+              }}
+              autoComplete="off"
+            >
+              <TextField
+                required
+                error={dataError.iterations !== "" && true}
+                helperText={dataError.iterations !== "" && dataError.iterations}
+                name="iterations"
+                id="input--iterations"
+                label="Max value of iterations"
+                type="number"
+                value={data.iterations}
+                variant="standard"
+                onChange={handleChange} 
+                inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+              />
+            </Box>         
+          </Item>
+        </Stack>
+        <SolveBtn handleClick={toggleShowAnswer} />
       </Collapse>
 
-      <Collapse in={showAnswer}>
-        <Paper
+      <Collapse in={showAnswer} orientation="vertical">
+        {showAnswer === true &&<Paper
           sx={{
             display: 'flex',
             justifyContent: 'center',
@@ -311,7 +338,7 @@ export default function Bisection() {
           </ListItem>
           <ListItem>
             <Chip
-              label={`f(x) = ${data.funcType === functionTypeEnums.LogFunction ? "ln(x+1)" : data.customFunc}`} 
+              label={`${data.funcType === functionTypeEnums.LogFunction ? "f(x) = ln(x+1)" : formatFunc(data.customFunc, 'x')}`} 
             />
           </ListItem>
           <ListItem>
@@ -325,8 +352,8 @@ export default function Bisection() {
               label={`${data.error}`} 
             />
           </ListItem>
-        </Paper>
-        {showAnswer && <ResultTable 
+        </Paper>}
+        {showAnswer === true && <ResultTable 
           rows={calcBisection(
             parseFloat(data.a),
             parseFloat(data.b),

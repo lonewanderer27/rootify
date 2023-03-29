@@ -1,3 +1,4 @@
+import { formatFunc } from "./misc";
 import { functionTypeEnums } from "../enums";
 import { parser } from "mathjs";
 import { rowType } from "../types";
@@ -11,11 +12,7 @@ export default function calcBisection(
   error: number
 ): rowType[] {
   const p = parser();
-  if (customFunc.includes("f(x)")) {
-    p.evaluate(customFunc)
-  } else {
-    p.evaluate(`f(x) = ${customFunc}`)
-  }
+  p.evaluate(customFunc)
   const useCustomFunc = p.get('f')
 
   let rows: rowType[] = [];

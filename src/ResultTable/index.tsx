@@ -4,6 +4,7 @@ import { rowType, rowsType } from "../types";
 
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
+import { MathNode } from "mathjs";
 import { nanoid } from 'nanoid'
 import { styled } from "@mui/material";
 import { tableCellClasses } from '@mui/material/TableCell';
@@ -12,6 +13,7 @@ export default function ResultTable(props: {
   rows: rowsType, 
   funcType?: functionTypeEnums,
   customFunc?: string,
+  firstDerivativeFunc?: MathNode,
   methodType: methodTypeEnums,
 }){
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -42,22 +44,22 @@ export default function ResultTable(props: {
       'a',
       'b',
       'c = (a + b) / 2',
-      `f(c) ${props.funcType === functionTypeEnums.LogFunction ? "= ln(x+1)" : `= ${props.customFunc}`}`,
+      props.funcType === functionTypeEnums.LogFunction ? "f(c) = ln(x+1)" : props.customFunc,
       '| a - b |',
       '< E'
     ],
     newton: [
       'n',
       'Xn',
-      `f(Xn) ${props.funcType === functionTypeEnums.LogFunction ? "= 1/(x+1)" : `= ${props.customFunc}`}`,
-      `f'(Xn) ${props.funcType === functionTypeEnums.LogFunction ? "= ln(x+1)" : `= ${props.customFunc}`}`,
+      props.funcType === functionTypeEnums.LogFunction ? "f(Xn) = ln(x+1)" : props.customFunc,
+      props.funcType === functionTypeEnums.LogFunction ? "f'(Xn) = 1/(x+1)" :  `f'(Xn) = ${props.firstDerivativeFunc}`,
       'Xn + 1',
       '| Xn+1 - Xn |',
       '< E'
     ]
   }
   
-  const getHeader = (): string[] => {
+  const getHeader = (): any[] => {
     if (props.methodType === methodTypeEnums.Bisection){
       return headers.bisection
     } else {

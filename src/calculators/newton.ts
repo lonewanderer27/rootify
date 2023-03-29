@@ -1,5 +1,6 @@
 import { derivative, parser } from "mathjs";
 
+import { formatFunc } from "./misc";
 import { functionTypeEnums } from "../enums";
 import { rowType } from "../types";
 
@@ -11,12 +12,7 @@ export default function calcNewton(
   error: number
 ): rowType[] {
   const p = parser();
-  if (customFunc.includes("f(x) =")) {
-    p.evaluate(customFunc)
-  } else {
-    p.evaluate(`f(x) = ${customFunc}`)
-  }
-  
+  p.evaluate(formatFunc(customFunc, 'x'))
   const useCustomFunc = p.get('f')
   const firstDerivative = derivative(customFunc, 'x')
 

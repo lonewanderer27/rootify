@@ -11,14 +11,12 @@ import Drawer from '@mui/material/Drawer';
 import ForkRightIcon from '@mui/icons-material/ForkRight';
 import IconButton from '@mui/material/IconButton';
 import InfoIcon from '@mui/icons-material/Info';
-import InputLabel from "@mui/material/InputLabel";
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import MenuIcon from '@mui/icons-material/Menu';
-import MenuItem from '@mui/material/MenuItem';
 import Newton from './Newton';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
@@ -26,6 +24,7 @@ import { methodTypeEnums } from './enums';
 import { useState } from 'react';
 
 export const drawerWidth = 240;
+export const inputWidth = '45vw';
 
 function App() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -35,9 +34,7 @@ function App() {
   const switchToNewton = () => setMethodType(() => methodTypeEnums.Newton);
   const switchToAbout = () => setMethodType(() => null);
 
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
+  const handleDrawerToggle = () => setMobileOpen((prev) => !prev);
 
   const drawer = (
     <div>
