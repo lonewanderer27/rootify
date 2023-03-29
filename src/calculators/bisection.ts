@@ -1,4 +1,5 @@
 import { functionTypeEnums } from "../enums";
+import { parser } from "mathjs";
 import { rowType } from "../types";
 
 export default function calcBisection(
@@ -9,6 +10,14 @@ export default function calcBisection(
   iterations: number,
   error: number
 ): rowType[] {
+  const p = parser();
+  if (customFunc.includes("f(x)")) {
+    p.evaluate(customFunc)
+  } else {
+    p.evaluate(`f(x) = ${customFunc}`)
+  }
+  const useCustomFunc = p.get('f')
+
   let rows: rowType[] = [];
 
   let temp_n = 0;
@@ -34,7 +43,13 @@ export default function calcBisection(
     }
 
     temp_c = (temp_a+temp_b) / 2
-    temp_d = Math.log(temp_c+1);
+
+    if (funcType === functionTypeEnums.AnyFunction) {
+      temp_d = useCustomFunc(temp_c)
+    } else {
+      temp_d = Math.log(temp_c+1);
+    }
+
     temp_e = Math.abs(temp_a - temp_b);
     temp_less_than_error = temp_e < error;
 

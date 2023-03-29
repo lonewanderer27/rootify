@@ -1,3 +1,5 @@
+import { derivative, parser } from "mathjs";
+
 import { functionTypeEnums } from "../enums";
 import { rowType } from "../types";
 
@@ -8,6 +10,18 @@ export default function calcNewton(
   iterations: number,
   error: number
 ): rowType[] {
+  const p = parser();
+  if (customFunc.includes("f(x)")) {
+    p.evaluate(customFunc)
+  } else {
+    p.evaluate(`f(x) = ${customFunc}`)
+  }
+  
+  const useCustomFunc = p.get('f')
+  const firstDerivative = derivative(customFunc, 'x')
+
+  console.log(`customFunction: ${useCustomFunc}`)
+
   let rows: rowType[] = [];
 
   let temp_n = 0;
@@ -30,8 +44,14 @@ export default function calcNewton(
       temp_a = temp_d;
     }
 
-    temp_b = Math.log(temp_a+1)
-    temp_c = 1 / (temp_a+1)
+    if (customFunc === functionTypeEnums.AnyFunction){
+      temp_b = useCustomFunc(temp_a)      
+      temp_c = firstDerivative.evaluate(temp_a)
+    } else {
+      temp_b = Math.log(temp_a+1)
+      temp_c = 1 / (temp_a+1)
+    }
+
     temp_d = temp_a - (temp_b / temp_c)
     temp_e = Math.abs(temp_d - temp_a);
     temp_less_than_error = temp_e < error;

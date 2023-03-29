@@ -1,7 +1,5 @@
 import './App.css'
 
-import { functionTypeEnums, methodTypeEnums } from './enums';
-
 import About from './About';
 import AcUnitIcon from '@mui/icons-material/AcUnit';
 import AppBar from '@mui/material/AppBar';
@@ -11,9 +9,6 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import ForkRightIcon from '@mui/icons-material/ForkRight';
-import FormControl from "@mui/material/FormControl";
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormGroup from '@mui/material/FormGroup';
 import IconButton from '@mui/material/IconButton';
 import InfoIcon from '@mui/icons-material/Info';
 import InputLabel from "@mui/material/InputLabel";
@@ -25,10 +20,9 @@ import ListItemText from '@mui/material/ListItemText';
 import MenuIcon from '@mui/icons-material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Newton from './Newton';
-import Select from '@mui/material/Select';
-import Switch from '@mui/material/Switch';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import { methodTypeEnums } from './enums';
 import { useState } from 'react';
 
 export const drawerWidth = 240;
@@ -138,6 +132,7 @@ function App() {
           {drawer}
         </Drawer>
       </Box>
+
       {methodType === methodTypeEnums.Bisection && <Bisection />}
       {methodType === methodTypeEnums.Newton && <Newton />}
       {methodType === null && <About/>}
