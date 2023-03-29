@@ -11,7 +11,7 @@ export default function calcNewton(
   error: number
 ): rowType[] {
   const p = parser();
-  if (customFunc.includes("f(x)")) {
+  if (customFunc.includes("f(x) =")) {
     p.evaluate(customFunc)
   } else {
     p.evaluate(`f(x) = ${customFunc}`)
@@ -44,9 +44,9 @@ export default function calcNewton(
       temp_a = temp_d;
     }
 
-    if (customFunc === functionTypeEnums.AnyFunction){
+    if (funcType === functionTypeEnums.AnyFunction){
       temp_b = useCustomFunc(temp_a)      
-      temp_c = firstDerivative.evaluate(temp_a)
+      temp_c = firstDerivative.evaluate({x: temp_a})
     } else {
       temp_b = Math.log(temp_a+1)
       temp_c = 1 / (temp_a+1)
