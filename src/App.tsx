@@ -1,5 +1,3 @@
-import './App.css'
-
 import About from './About';
 import AcUnitIcon from '@mui/icons-material/AcUnit';
 import AppBar from '@mui/material/AppBar';

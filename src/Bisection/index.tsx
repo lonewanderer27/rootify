@@ -180,7 +180,7 @@ export default function Bisection() {
   return (
     <Box
       component="main"
-      sx={{ flexGrow: 1, p: { sm: 0, md: 4}, width: { xs: `calc(100% - ${drawerWidth}px)` } }}
+      sx={{ flexGrow: 1, p: { xs: 2, md: 4}, width: { xs: `calc(100% - ${drawerWidth}px)` } }}
     >
       <Toolbar />
       <Collapse in={!showAnswer}>
