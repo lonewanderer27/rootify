@@ -24,6 +24,10 @@ import { useState } from 'react';
 export const drawerWidth = 240;
 export const inputWidth = '45vw';
 
+export const defaultScreenCSS = {
+  p: { xs: 2, sm: 5, md: 10, lg: 20}
+}
+
 function App() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [methodType, setMethodType] = useState<methodTypeEnums | null>(() => methodTypeEnums.Bisection);
