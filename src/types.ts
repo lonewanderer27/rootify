@@ -4,6 +4,7 @@ export type bisectionData = {
   a: string,
   b: string,
   funcType: functionTypeEnums,
+  standardMethod: boolean,
   customFunc: string,
   iterations: number,
   error: string

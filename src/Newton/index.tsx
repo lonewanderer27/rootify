@@ -21,6 +21,7 @@ import TextField from "@mui/material/TextField";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import calcNewton from "../calculators/newton";
+import { defaultScreenCSS } from "../App";
 import { derivative } from "mathjs";
 import { randomTableVal } from "../calculators/test";
 import { styled } from '@mui/material/styles';
@@ -150,7 +151,7 @@ export default function Newton() {
   return (
     <Box
       component="main"
-      sx={{ flexGrow: 1, p: { xs: 2, md: 4}, width: { xs: `calc(100% - ${drawerWidth}px)` } }}
+      sx={{ flexGrow: 1, width: { xs: `calc(100% - ${drawerWidth}px)` }, ...defaultScreenCSS }}
     >
       <Toolbar />
       <Collapse in={!showAnswer}>

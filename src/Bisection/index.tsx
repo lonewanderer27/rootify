@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { TableComponents, TableVirtuoso } from 'react-virtuoso';
 import { bisectionData, bisectionDataError } from "../types";
-import { drawerWidth, inputWidth } from "../App";
+import { defaultScreenCSS, drawerWidth, inputWidth } from "../App";
 import { formatFunc, testFunc } from "../calculators/misc";
 import { functionTypeEnums, methodTypeEnums } from "../enums";
 
@@ -17,6 +17,7 @@ import RedoBtn from "../Buttons/RedoBtn";
 import ResultTable from "../ResultTable";
 import SolveBtn from "../Buttons/SolveBtn";
 import Stack from "@mui/material/Stack"
+import Switch from '@mui/material/Switch';
 import TextField from "@mui/material/TextField";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
@@ -41,6 +42,7 @@ export default function Bisection() {
     a: "",
     b: "",
     funcType: functionTypeEnums.LogFunction,
+    standardMethod: true,
     customFunc: "",
     iterations: 0,
     error: ""
@@ -71,7 +73,8 @@ export default function Bisection() {
       data.funcType,
       data.customFunc,
       data.iterations,
-      parseFloat(data.error)
+      parseFloat(data.error),
+      data.standardMethod
     )
   }
 
@@ -163,10 +166,11 @@ export default function Bisection() {
   }
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const {name, value, type, checked} = event.target
     setData((prev) => {
       const nextState = {
         ...prev,
-        [event.target.name]: event.target.value
+        [name]: type === "checkbox" ? checked : value
       }
       localStorage.setItem("rootify--bisectionData", JSON.stringify(nextState));
       resetDataErrorToBlank();
@@ -180,7 +184,7 @@ export default function Bisection() {
   return (
     <Box
       component="main"
-      sx={{ flexGrow: 1, p: { xs: 2, md: 4}, width: { xs: `calc(100% - ${drawerWidth}px)` } }}
+      sx={{ flexGrow: 1, width: { xs: `calc(100% - ${drawerWidth}px)` }, ...defaultScreenCSS }}
     >
       <Toolbar />
       <Collapse in={!showAnswer}>
@@ -308,6 +312,31 @@ export default function Bisection() {
               />
             </Box>         
           </Item>
+          <Item variant="outlined">
+            <Typography variant="h6" color="InfoText">Choose the algorithm that will be used</Typography>
+            <Box
+              component="form"
+              sx={{
+                '& > :not(style)': { m: 1, width: inputWidth },
+              }}
+              autoComplete="off"
+            >
+              <FormControlLabel
+                control={<Switch checked={data.standardMethod} onChange={handleChange} name="standardMethod" />}
+                label="Standard Method"
+              />
+              <Typography color="InfoText" sx={{fontWeight: "bold"}}>Standard Method: </Typography>
+              <Typography gutterBottom>
+                {`If f(a) * f(c) < 0, then new interval is [a, c]`}<br/>
+                {`If f(a) * f(c) > 0, then new interval is [c, b]`}
+              </Typography>
+              <Typography color="InfoText" sx={{fontWeight: "bold"}}>Old Method: </Typography>
+              <Typography gutterBottom>
+                {`If f(c) is positive, then new interval is [a, c]`}<br/>
+                {`If f(c) is negative, then new interval is [c, b]`}
+              </Typography>
+            </Box>
+          </Item>
         </Stack>
         <SolveBtn handleClick={toggleShowAnswer} />
       </Collapse>
@@ -360,7 +389,8 @@ export default function Bisection() {
             data.funcType,
             data.customFunc,
             data.iterations,
-            parseFloat(data.error)
+            parseFloat(data.error),
+            data.standardMethod
           )} 
           funcType={data.funcType}
           customFunc={data.customFunc}
