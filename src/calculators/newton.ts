@@ -4,6 +4,15 @@ import { formatFunc } from "./misc";
 import { functionTypeEnums } from "../enums";
 import { rowType } from "../types";
 
+/**
+ * Calculates the roots of a function using the Newton-Raphson method.
+ * @param xn The initial value of x to start the calculations from.
+ * @param funcType The type of function to be used in the calculations.
+ * @param customFunc The custom function to be used if `funcType` is `functionTypeEnums.AnyFunction`.
+ * @param iterations The maximum number of iterations to perform.
+ * @param error The maximum allowable error between iterations.
+ * @returns An array of objects containing the intermediate results of each iteration.
+ */
 export default function calcNewton(
   xn: number,
   funcType: functionTypeEnums,
@@ -11,47 +20,61 @@ export default function calcNewton(
   iterations: number,
   error: number
 ): rowType[] {
+  // Create a parser instance
   const p = parser();
-  p.evaluate(formatFunc(customFunc, 'x'))
-  const useCustomFunc = p.get('f')
-  const firstDerivative = derivative(customFunc, 'x')
+  // Parse the custom function
+  p.evaluate(formatFunc(customFunc, 'x'));
+  // Retrieve the parsed function
+  const useCustomFunc = p.get('f');
+  // Calculate the first derivative of the custom function
+  const firstDerivative = derivative(customFunc, 'x');
 
-  console.log(`customFunction: ${useCustomFunc}`)
-
+  // Initialize the rows array
   let rows: rowType[] = [];
 
-  let temp_n = 0;
-  let temp_a = xn;
-  let temp_b = 0;
-  let temp_c = 0
-  let temp_d = 0
-  let temp_e = 0
-  let temp_less_than_error = temp_e < error;
+  // Declare temporary variables and initialize them with default values
+  let temp_n = 0;             // Iteration number
+  let temp_a = xn;            // Initial value of x
+  let temp_b = 0;             // Value of f(x)
+  let temp_c = 0;             // Value of f'(x)
+  let temp_d = 0;             // New value of x
+  let temp_e = 0;             // Absolute error
+  let temp_less_than_error = temp_e < error; // Boolean value indicating whether error is less than tolerance
 
+  // Loop for a specified number of iterations or until the absolute error is less than the tolerance
   let i = 0
   while (i < iterations){
     console.log(`Loop ${i+1}`)
 
+    // Update iteration number
     temp_n = i+1;
 
     if (i === 0){
+      // Use the initial value of x for the first iteration
       temp_a = xn;
     } else {
+      // Use the new value of x from the previous iteration
       temp_a = temp_d;
     }
 
     if (funcType === functionTypeEnums.AnyFunction){
-      temp_b = useCustomFunc(temp_a)      
-      temp_c = firstDerivative.evaluate({x: temp_a})
+      // Evaluate f(x) and f'(x) for a custom function
+      temp_b = useCustomFunc(temp_a);     
+      temp_c = firstDerivative.evaluate({x: temp_a});
     } else {
-      temp_b = Math.log(temp_a+1)
-      temp_c = 1 / (temp_a+1)
+      // Evaluate f(x) and f'(x) for the default function
+      temp_b = Math.log(temp_a+1);
+      temp_c = 1 / (temp_a+1);
     }
 
-    temp_d = temp_a - (temp_b / temp_c)
+    // Calculate the new value of x
+    temp_d = temp_a - (temp_b / temp_c);
+    // Calculate the absolute error
     temp_e = Math.abs(temp_d - temp_a);
+    // Check if the absolute error is less than the tolerance
     temp_less_than_error = temp_e < error;
 
+    // Create a new row object with the temporary variables
     const row: rowType = {
       n: temp_n,
       a: temp_a,
@@ -61,16 +84,22 @@ export default function calcNewton(
       e: temp_e,
       less_than_error: temp_less_than_error
     }
-    console.table(row)
 
-    rows.push(row)
+    // print the intermediate results for checking
+    console.table(row);
+
+    // Add the row object to the rows array
+    rows.push(row);
     
+    // Incrementing the iteration counter
     i++;
 
+    // Exit the loop if the absolute error is less than the tolerance
     if (temp_less_than_error) {
       break;
     }
   }
 
+  // Return the rows array
   return rows;
 }

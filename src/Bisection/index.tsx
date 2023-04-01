@@ -132,12 +132,12 @@ export default function Bisection() {
       success = false;
     }
 
-    if ((data.b < data.a) || (data.a > data.b)) {
-      setDataError((prev) => ({
-        ...prev, b: "Needs to be greater than a"
-      }))
-      success = false;
-    }
+    // if ((data.b < data.a) || (data.a > data.b)) {
+    //   setDataError((prev) => ({
+    //     ...prev, b: "Needs to be greater than a"
+    //   }))
+    //   success = false;
+    // }
 
     if (
       regexLetters.test(data.error) || 
