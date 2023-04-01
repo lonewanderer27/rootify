@@ -11,7 +11,7 @@ import { rowType } from "../types";
  * @param customFunc The custom function to be used if `funcType` is `functionTypeEnums.AnyFunction`.
  * @param iterations The maximum number of iterations to perform.
  * @param error The maximum allowable error between iterations.
- * @returns An array of objects containing the intermediate results of each iteration.
+ * @returns {rowType[]} An array of `rowType` objects containing the intermediate results of each iteration.
  */
 export default function calcNewton(
   xn: number,
