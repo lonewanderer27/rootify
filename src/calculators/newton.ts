@@ -22,9 +22,8 @@ export default function calcNewton(
 ): rowType[] {
   // Create a parser instance
   const p = parser();
-  // Parse the custom function
-  p.evaluate(formatFunc(customFunc, 'x'));
-  // Retrieve the parsed function
+    // Parsing the user-defined function string and setting it as 'f' for use later
+  p.evaluate(customFunc);
   const useCustomFunc = p.get('f');
   // Calculate the first derivative of the custom function
   const firstDerivative = derivative(customFunc, 'x');

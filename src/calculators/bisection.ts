@@ -1,4 +1,3 @@
-import { formatFunc } from "./misc";
 import { functionTypeEnums } from "../enums";
 import { parser } from "mathjs";
 import { rowType } from "../types";
