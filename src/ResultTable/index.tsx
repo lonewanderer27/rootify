@@ -98,8 +98,8 @@ export default function ResultTable(props: {
       </TableContainer>
       {props.rows.slice(-1)[0].less_than_error === false && 
       <Alert severity="info">
-        <AlertTitle>Root not (yet) found</AlertTitle>
-        We still haven't reached the root on iteration {props.rows.length}. <br/>
+        <AlertTitle>Info</AlertTitle>
+        Less than E is still not true on last iteration ({props.rows.length}). <br/>
         Click the REDO button below, increase the maximum number of iterations, then try again.
       </Alert>}
       {props.rows.slice(-1)[0].less_than_error === true && 
