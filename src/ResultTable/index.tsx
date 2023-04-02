@@ -99,7 +99,7 @@ export default function ResultTable(props: {
       {props.rows.slice(-1)[0].less_than_error === false && 
       <Alert severity="info">
         <AlertTitle>Info</AlertTitle>
-        Less than E is still not true on last iteration ({props.rows.length}). <br/>
+        Less than E is still not true on last iteration ({props.rows.length}). <br/><br/>
         Click the REDO button below, increase the maximum number of iterations, then try again.
       </Alert>}
       {props.rows.slice(-1)[0].less_than_error === true && 
