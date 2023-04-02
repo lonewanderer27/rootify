@@ -97,7 +97,7 @@ export default function ResultTable(props: {
       {props.rows.slice(-1)[0].less_than_error === false && 
       <Alert severity="info">
         <AlertTitle>Tip</AlertTitle>
-        It looks like on {props.rows.length} iteration, we still haven't reached the root. <br/>
+        We still haven't reached the root on {props.rows.length} iteration.  <br/>
         Click the REDO button below, increase the maximum number of iterations, then try again.
       </Alert> }
     </Paper>
