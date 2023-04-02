@@ -13,11 +13,11 @@ Complete
 
 #### Bisection  
 
-[ PRETEND SCREEN SHOT IS HERE ]
+![Bisection Screenshot](https://raw.githubusercontent.com/lonewanderer27/rootify/master/screenshot_bisection.png)
 
 #### Newton  
 
-[ PRETEND OTHER SCREEN SHOT IS HERE ]
+![Newton Screenshot](https://raw.githubusercontent.com/lonewanderer27/rootify/master/screenshot_newton.png)
 
 ## Installation and Setup Instructions 
 
