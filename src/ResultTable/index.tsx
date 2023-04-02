@@ -105,7 +105,7 @@ export default function ResultTable(props: {
       {props.rows.slice(-1)[0].less_than_error === true && 
       <Alert severity="success">
         <AlertTitle>Less than E at iteration {props.rows.length}!</AlertTitle><br/>
-        <AlertTitle>Final Answer: </AlertTitle>
+        <AlertTitle sx={{fontWeight: "bold"}}>Final Answer: </AlertTitle>
           Cn = {props.cn}<br/>
           f(Cn) = {props.f_cn}
       </Alert>}
