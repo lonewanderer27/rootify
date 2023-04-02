@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { bisectionData, bisectionDataError, newtonData, newtonDataError } from "../types";
 import { drawerWidth, inputWidth } from "../App";
 import { formatFunc, testFunc } from "../calculators/misc";
 import { functionTypeEnums, methodTypeEnums } from "../enums";
 import { hasInvalidCharacters, invalidError } from "../Checkers";
+import { newtonData, newtonDataError } from "../types";
 
 import Alert from "@mui/material/Alert";
 import Avatar from "@mui/material/Avatar"
@@ -11,9 +11,7 @@ import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip"
 import Collapse from '@mui/material/Collapse';
 import FormControlLabel from "@mui/material/FormControlLabel"
-import Grid from "@mui/material/Grid";
 import Paper from '@mui/material/Paper';
-import { REGEXLETTERS } from "../constants";
 import Radio from "@mui/material/Radio"
 import RadioGroup from "@mui/material/RadioGroup"
 import RedoBtn from "../Buttons/RedoBtn";
@@ -27,7 +25,6 @@ import Typography from "@mui/material/Typography";
 import calcNewton from "../calculators/newton";
 import { defaultScreenCSS } from "../App";
 import { derivative } from "mathjs";
-import { randomTableVal } from "../calculators/test";
 import { styled } from '@mui/material/styles';
 
 export function get1stDerivative(stringCustomFunc: string, stringVar: string){

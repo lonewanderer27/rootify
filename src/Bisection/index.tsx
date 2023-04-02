@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { TableComponents, TableVirtuoso } from 'react-virtuoso';
 import { bisectionData, bisectionDataError } from "../types";
 import calcBisection, { testBisectionInterval } from "../calculators/bisection";
 import { defaultScreenCSS, drawerWidth, inputWidth } from "../App";
@@ -10,14 +9,10 @@ import { hasInvalidCharacters, invalidError } from "../Checkers";
 import Alert from "@mui/material/Alert";
 import Avatar from "@mui/material/Avatar"
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip"
-import CloseIcon from '@mui/icons-material/Close';
 import Collapse from '@mui/material/Collapse';
-import FormControlLabel from "@mui/material/FormControlLabel"
-import IconButton from "@mui/material/IconButton";
+import FormControlLabel from "@mui/material/FormControlLabel";
 import Paper from '@mui/material/Paper';
-import { REGEXLETTERS } from "../constants";
 import Radio from "@mui/material/Radio"
 import RadioGroup from "@mui/material/RadioGroup"
 import RedoBtn from "../Buttons/RedoBtn";
