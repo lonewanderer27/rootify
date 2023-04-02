@@ -2,9 +2,9 @@ import { REGEXLETTERS } from "../constants";
 
 export function hasInvalidCharacters(str: string) {
   if (REGEXLETTERS.test(str) || str.length === 0) {
-    return false
+    return true
   }
-  return true;
+  return false;
 }
 
 export function invalidError(str: string) {
