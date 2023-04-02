@@ -69,9 +69,8 @@ export function calcBisectionStandard(
   let temp_f_a = 0; // value of function at lower bound
 
   let temp_b = 0; // upper bound of the interval
-  let temp_f_b = 0; // value of function at upper bound
 
-  let temp_f_a_f_b = 0; // value of f(a) * f(b)
+  let temp_f_a_f_c = 0; // value of f(a) * f(c)
   
   let temp_c = 0; // midpoint of the interval
   let temp_d = 0; // value of the function at the midpoint
@@ -91,33 +90,29 @@ export function calcBisectionStandard(
       temp_a = a;
       temp_b = b;
     } else {
-      // compute the value of function at current values of a, b 
-      temp_f_a = useCustomFunc(temp_a);
-      temp_f_b = useCustomFunc(temp_b);
-      // multiply the result of two functions together
-      temp_f_a_f_b = temp_f_a * temp_f_b;
-      
-      // Use the interval: [a, c]    if f(a)*f(c) < 0, 
-      if (temp_f_a_f_b < 0) {
-        temp_a = temp_a;
-        temp_b = temp_c;
-      } 
-      // or the interval: [c, b]     if f(a)*f(b) > 0
-      else if (temp_f_a_f_b > 0 ) {
-        temp_a = temp_c;
-        temp_b = temp_b
+      // if f(a) * f(c) < 0 then use the interval [a, c]
+      if (temp_f_a_f_c < 0){
+        temp_b = temp_c
+      // else use the interval [c, b]
+      } else if (temp_f_a_f_c > 0){
+        temp_a = temp_c
       }
     }
 
     // Calculating the midpoint of the interval
     temp_c = (temp_a+temp_b) / 2
 
-    // Calculating the value of the function at the midpoint, either by using the user-defined function or the natural logarithm
+    // Calculating the value of the functions at the midpoint, either by using the user-defined function or the natural logarithm
     if (funcType === functionTypeEnums.AnyFunction) {
       temp_d = useCustomFunc(temp_c)
+      temp_f_a = useCustomFunc(temp_a);
     } else {
       temp_d = Math.log(temp_c+1);
+      temp_f_a = Math.log(temp_a+1);
     }
+
+    // compute the value of f(a) * f(c)
+    temp_f_a_f_c = temp_f_a * temp_d
 
     // Calculating the absolute difference between temp_a and temp_b, and updating the boolean flag
     temp_e = Math.abs(temp_a - temp_b);
