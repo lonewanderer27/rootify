@@ -10,10 +10,19 @@ export type bisectionData = {
   error: string
 }
 
+export type testBisectionIntervalResults = {
+  f_a: number,
+  f_a_sign: number | null,
+  f_b: number,
+  f_b_sign: number | null, 
+  errorMessages: string[],
+  success: boolean
+}
+
 export type bisectionDataError = {
   a: string,
   b: string,
-  func: string,
+  func: string[],
   iterations: string;
   error: string;
 }

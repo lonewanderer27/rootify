@@ -50,7 +50,7 @@ export default function Bisection() {
   const [dataError, setDataError] = useState<bisectionDataError>(() => ({
     a: "",
     b: "",
-    func: "",
+    func: [],
     iterations: "",
     error: ""
   }));
@@ -83,7 +83,7 @@ export default function Bisection() {
     setDataError({
       a: "",
       b: "",
-      func: "",
+      func: [],
       iterations: "",
       error: ""
     });
@@ -164,20 +164,22 @@ export default function Bisection() {
     // Checking if the function type is 'AnyFunction' and the custom function is invalid
     if (data.funcType === functionTypeEnums.AnyFunction && testFunc(data.customFunc) === false) {
       // If the function is invalid, set the error message and set success to false
-      setDataError((prev) => ({...prev, func: 'Invalid function'}))
+      setDataError((prev) => ({...prev, func: ['Invalid function']}))
       success = false;
     } else {
+      const res = testBisectionInterval(parseFloat(data.a), parseFloat(data.b), data.funcType, data.customFunc)
+
       // Otherwise, check if the function is applicable to the values of f(a) and f(b)
-      if (testBisectionInterval(parseFloat(data.a), parseFloat(data.b), data.funcType, data.customFunc) === false) {
+      if (res.success === false) {
         // If the function is not applicable, set the error message and set success to false
         setDataError((prev) => (
          {
           ...prev,
-          func: "Chosen function is not applicable to the values of f(a) and f(b)"
+          func: res.errorMessages
          }
         ))
+        success = false;
       }
-      success = false;
     }
     
     // Return the result of the verification
@@ -283,9 +285,13 @@ export default function Bisection() {
                     />}
                   </Collapse>
                 </RadioGroup>
-                {dataError.func !== "" && <Typography variant="caption" display="block" sx={{ color: "red" }} gutterBottom>
-                  {dataError.func}
-                </Typography>}
+                {dataError.func.length !== 0 && dataError.func.map((error) => {
+                  return (
+                    <Typography variant="caption" display="block" sx={{ color: "red" }} gutterBottom>
+                      {error}
+                    </Typography>
+                  )
+                })}
               </>
             </Box>         
           </Item>

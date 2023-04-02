@@ -1,7 +1,8 @@
+import { rowType, testBisectionIntervalResults } from "../types";
+
 // Importing necessary modules and types
 import { functionTypeEnums } from "../enums";
 import { parser } from "mathjs";
-import { rowType } from "../types";
 
 // Defining the function to test bisection interval
 export function testBisectionInterval(
@@ -9,12 +10,17 @@ export function testBisectionInterval(
   b: number,
   funcType: functionTypeEnums, 
   customFunc: string,
-) {
-  let f_a = 0;
-  let f_b = 0;
+): testBisectionIntervalResults  {
 
-  // Initializing the success variable to true
-  let success = true;
+  // Initializing the response object with default values
+  let response: testBisectionIntervalResults = {
+    f_a: 0,
+    f_a_sign: null,
+    f_b: 0,
+    f_b_sign: null,
+    errorMessages: [],
+    success: true
+  }
 
   // Creating an instance of the Math.js parser
   const p = parser();
@@ -25,27 +31,45 @@ export function testBisectionInterval(
 
   // Evaluating the function at point 'a' and 'b'
   if (funcType === functionTypeEnums.AnyFunction) {
-    f_a = useCustomFunc(a);
-    f_b = useCustomFunc(b);
+    response.f_a = useCustomFunc(a);
+    response.f_b = useCustomFunc(b);
   } else {
-    f_a = Math.log(a+1)
-    f_b = Math.log(b+1)
+    // Using the natural logarithm function as default
+    response.f_a = Math.log(a+1)
+    response.f_b = Math.log(b+1)
   }
 
-  // Testing if the result have same signs,
-  // meaning [+, -] or [-, +]
-  if (Math.sign(f_a) == Math.sign(f_b)) {
-    // If the signs are the same, the test failed, so set success to false
-    success = false;
-  }
+  // Setting the signs of f(a) and f(b) for later use
+  response.f_a_sign = Math.sign(response.f_a)
+  response.f_b_sign = Math.sign(response.f_b)
+
+  // Adding error messages to response object
+  response.errorMessages = [
+    `f(a) = ${response.f_a}`,
+    `f(b) = ${response.f_b}`,
+  ]
 
   // Checking if f(a) or f(b) is 0
-  if (Math.sign(f_a) === 0 || Math.sign(f_b) === 0) {
-    success = false;
+  if (response.f_a_sign === 0 || response.f_b_sign === 0) {
+    response.errorMessages.push(`f(a) or f(b) cannot have 0 as result`)
+    response.success = false;
+  } else {
+    // Testing if the result have same signs,
+    // meaning [+, -] or [-, +]
+    if (response.f_a_sign === response.f_b_sign) {
+      // If the signs are the same, the test failed, so set success to false
+      response.errorMessages.push(`f(a) and f(b) cannot have the same sign which is ${response.f_a_sign === 1 ? "positive" : "negative"}`)
+      response.success = false;
+    }
   }
-
+  
+  // If success is false, add an additional error message to indicate that the chosen function is not applicable to the values of f(a) and f(b)
+  if (response.success === false) {
+    response.errorMessages.push("Chosen function is not applicable to the values of f(a) and f(b)")
+  }
+  
   // Return the result of the test
-  return success;
+  return response;
 }
 
 
