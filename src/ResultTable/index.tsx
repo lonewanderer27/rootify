@@ -1,11 +1,11 @@
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import { Alert, AlertTitle, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { functionTypeEnums, methodTypeEnums } from "../enums";
-import { rowType, rowsType } from "../types";
 
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import { MathNode } from "mathjs";
 import { nanoid } from 'nanoid'
+import { rowsType } from "../types";
 import { styled } from "@mui/material";
 import { tableCellClasses } from '@mui/material/TableCell';
 
@@ -30,11 +30,12 @@ export default function ResultTable(props: {
     '&:nth-of-type(odd)': {
       backgroundColor: theme.palette.action.hover,
     },
+
     // hide last border
     '&:last-child td, &:last-child th': {
       border: 0,
-      color: theme.palette.info.contrastText,
-      backgroundColor: theme.palette.warning.main
+      color: props.rows.slice(-1)[0].less_than_error === false ? null : theme.palette.info.contrastText,
+      backgroundColor: props.rows.slice(-1)[0].less_than_error === false ?  theme.palette.action.hover : theme.palette.warning.main
     },
   }));
 
@@ -93,6 +94,12 @@ export default function ResultTable(props: {
           </TableBody>
         </Table>
       </TableContainer>
+      {props.rows.slice(-1)[0].less_than_error === false && 
+      <Alert severity="info">
+        <AlertTitle>Tip</AlertTitle>
+        It looks like on {props.rows.length} iteration, we still haven't reached the root. <br/>
+        Click the REDO button below, increase the maximum number of iterations, then try again.
+      </Alert> }
     </Paper>
     
   )
