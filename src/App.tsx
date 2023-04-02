@@ -25,7 +25,7 @@ export const drawerWidth = 240;
 export const inputWidth = '45vw';
 
 export const defaultScreenCSS = {
-  p: { xs: 2, sm: 5, md: 10, lg: 20}
+  p: { xs: 2, md: 10, lg: 20}
 }
 
 function App() {
