@@ -13,7 +13,7 @@ export type bisectionData = {
 export type bisectionDataError = {
   a: string,
   b: string,
-  customFunc: string,
+  func: string,
   iterations: string;
   error: string;
 }

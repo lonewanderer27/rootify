@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { TableComponents, TableVirtuoso } from 'react-virtuoso';
 import { bisectionData, bisectionDataError } from "../types";
+import calcBisection, { testBisectionInterval } from "../calculators/bisection";
 import { defaultScreenCSS, drawerWidth, inputWidth } from "../App";
 import { formatFunc, testFunc } from "../calculators/misc";
 import { functionTypeEnums, methodTypeEnums } from "../enums";
@@ -21,7 +22,6 @@ import Switch from '@mui/material/Switch';
 import TextField from "@mui/material/TextField";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import calcBisection from "../calculators/bisection";
 import { styled } from '@mui/material/styles';
 
 const ListItem = styled('li')(({ theme }) => ({
@@ -50,7 +50,7 @@ export default function Bisection() {
   const [dataError, setDataError] = useState<bisectionDataError>(() => ({
     a: "",
     b: "",
-    customFunc: "",
+    func: "",
     iterations: "",
     error: ""
   }));
@@ -83,7 +83,7 @@ export default function Bisection() {
     setDataError({
       a: "",
       b: "",
-      customFunc: "",
+      func: "",
       iterations: "",
       error: ""
     });
@@ -115,19 +115,25 @@ export default function Bisection() {
   };
 
   const verifyInputs = (data: bisectionData) => {
+    // Defining a regular expression to match any character that is not a digit, plus sign, minus sign, comma, period or whitespace
     const regexLetters = /[^0-9+\-,.\s]/;
 
+    // Initializing the success variable to true
     let success = true;
+
+    // Checking if interval a contains invalid characters or is empty
     if (regexLetters.test(data.a) || data.a.length === 0) {
       setDataError((prev) => ({...prev, a: "Invalid Number"}))
       success = false;
     }
     
+    // Checking if interval b contains invalid characters or is empty
     if (regexLetters.test(data.b) || data.b.length === 0) {
       setDataError((prev) => ({...prev, b: "Invalid Number"}))
       success = false;
     }
 
+    // Checking if interval a and b have the same value
     if ((data.a === data.b)) {
       setDataError((prev) => ({
         ...prev, b: "Needs to be different from a",
@@ -136,33 +142,45 @@ export default function Bisection() {
       success = false;
     }
 
-    // if ((data.b < data.a) || (data.a > data.b)) {
-    //   setDataError((prev) => ({
-    //     ...prev, b: "Needs to be greater than a"
-    //   }))
-    //   success = false;
-    // }
-
+    // Checking if error contains invalid characters, is empty or is equal to '0.' or '0'
     if (
       regexLetters.test(data.error) || 
       data.error.length === 0 || 
       data.error === "0." || 
       data.error === "0"
     ) {
+      // If error is invalid, set the error message and set success to false
       setDataError((prev) => ({...prev, error: "Invalid Number"}))
       success = false;
     }
     
+    // Checking if 'iterations' is less than or equal to zero or greater than 100
     if (data.iterations <= 0 || data.iterations > 100) {
+      // If 'iterations' is invalid, set the error message and set success to false
       setDataError((prev) => ({...prev, iterations: "Needs to be greater than zero or less than 100"}))
       success = false;
     }
 
+    // Checking if the function type is 'AnyFunction' and the custom function is invalid
     if (data.funcType === functionTypeEnums.AnyFunction && testFunc(data.customFunc) === false) {
-      setDataError((prev) => ({...prev, customFunc: 'Invalid function'}))
+      // If the function is invalid, set the error message and set success to false
+      setDataError((prev) => ({...prev, func: 'Invalid function'}))
+      success = false;
+    } else {
+      // Otherwise, check if the function is applicable to the values of f(a) and f(b)
+      if (testBisectionInterval(parseFloat(data.a), parseFloat(data.b), data.funcType, data.customFunc) === false) {
+        // If the function is not applicable, set the error message and set success to false
+        setDataError((prev) => (
+         {
+          ...prev,
+          func: "Chosen function is not applicable to the values of f(a) and f(b)"
+         }
+        ))
+      }
       success = false;
     }
-
+    
+    // Return the result of the verification
     return success;
   }
 
@@ -232,39 +250,43 @@ export default function Bisection() {
               }}
               autoComplete="off"
             >
-              <RadioGroup
-                row
-                onChange={handleChange}
-                value={data.funcType}
-              >
-                <FormControlLabel 
-                  name="funcType"
-                  value={functionTypeEnums.LogFunction}
-                  control={<Radio/>} 
-                  label="ln(x+1)" 
-                />
-                <FormControlLabel 
-                  name="funcType"
-                  value={functionTypeEnums.AnyFunction} 
-                  control={<Radio/>}
-                  label="Custom" 
-                />
-                <Collapse 
-                  in={data.funcType === functionTypeEnums.AnyFunction} 
-                  orientation="horizontal"
+              <>
+                <RadioGroup
+                  row
+                  onChange={handleChange}
+                  value={data.funcType}
+                  
                 >
-                  {data.funcType === functionTypeEnums.AnyFunction && <TextField
-                    error={dataError.customFunc !== "" && true}
-                    helperText={dataError.customFunc !== "" && dataError.customFunc}
-                    name="customFunc"
-                    id="input--func"
-                    label="Format: f(x) = <Function>"
-                    value={data.customFunc}
-                    variant="standard"
-                    onChange={handleChange} 
-                  />}
-                </Collapse>
-              </RadioGroup>
+                  <FormControlLabel 
+                    name="funcType"
+                    value={functionTypeEnums.LogFunction}
+                    control={<Radio/>} 
+                    label="ln(x+1)" 
+                  />
+                  <FormControlLabel 
+                    name="funcType"
+                    value={functionTypeEnums.AnyFunction} 
+                    control={<Radio/>}
+                    label="Custom" 
+                  />
+                  <Collapse 
+                    in={data.funcType === functionTypeEnums.AnyFunction} 
+                    orientation="horizontal"
+                  >
+                    {data.funcType === functionTypeEnums.AnyFunction && <TextField
+                      name="customFunc"
+                      id="input--func"
+                      label="Format: f(x) = <Function>"
+                      value={data.customFunc}
+                      variant="standard"
+                      onChange={handleChange} 
+                    />}
+                  </Collapse>
+                </RadioGroup>
+                {dataError.func !== "" && <Typography variant="caption" display="block" sx={{ color: "red" }} gutterBottom>
+                  {dataError.func}
+                </Typography>}
+              </>
             </Box>         
           </Item>
           <Item variant="outlined">
@@ -315,6 +337,7 @@ export default function Bisection() {
           </Item>
           <Item variant="outlined">
             <Typography variant="h6" color="InfoText">Choose the algorithm that will be used</Typography>
+            <Typography variant="caption">Do not change unless absolutely necessary</Typography>
             <Box
               component="form"
               sx={{
@@ -324,7 +347,7 @@ export default function Bisection() {
             >
               <FormControlLabel
                 control={<Switch checked={data.standardMethod} onChange={handleChange} name="standardMethod" />}
-                label="Standard Method"
+                label={data.standardMethod ? "Standard Method" : "Old Method" }
               />
               <Typography color="InfoText" sx={{fontWeight: "bold"}}>Standard Method: </Typography>
               <Typography gutterBottom>
