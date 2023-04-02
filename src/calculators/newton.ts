@@ -1,8 +1,7 @@
+import { answerType, rowType } from "../types";
 import { derivative, parser } from "mathjs";
 
-import { formatFunc } from "./misc";
 import { functionTypeEnums } from "../enums";
-import { rowType } from "../types";
 
 /**
  * Calculates the roots of a function using the Newton-Raphson method.
@@ -19,7 +18,7 @@ export default function calcNewton(
   customFunc: string,
   iterations: number,
   error: number
-): rowType[] {
+): answerType {
   // Create a parser instance
   const p = parser();
     // Parsing the user-defined function string and setting it as 'f' for use later
@@ -71,7 +70,7 @@ export default function calcNewton(
     // Calculate the absolute error
     temp_e = Math.abs(temp_d - temp_a);
     // Check if the absolute error is less than the tolerance
-    temp_less_than_error = temp_e < error;
+    temp_less_than_error = temp_e < error
 
     // Create a new row object with the temporary variables
     const row: rowType = {
@@ -99,6 +98,14 @@ export default function calcNewton(
     }
   }
 
-  // Return the rows array
-  return rows;
+  // compute the final answers
+  const cn = rows.slice(-1)[0].a;                 
+  const f_cn = useCustomFunc(cn);
+
+  // Return the rows array along with the final answers
+  return {
+    cn: cn,
+    f_cn: f_cn,
+    rows: rows
+  }
 }

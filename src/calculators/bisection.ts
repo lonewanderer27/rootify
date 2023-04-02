@@ -1,4 +1,4 @@
-import { rowType, testBisectionIntervalResults } from "../types";
+import { answerType, rowType, testBisectionIntervalResults } from "../types";
 
 // Importing necessary modules and types
 import { functionTypeEnums } from "../enums";
@@ -81,7 +81,7 @@ export default function calcBisection(
   iterations: number,
   error: number,
   standardMethod: boolean
-): rowType[] {
+): answerType {
   if (standardMethod) {
     return calcBisectionStandard(
       a,
@@ -123,7 +123,7 @@ export function calcBisectionStandard(
   customFunc: string,
   iterations: number,
   error: number
-): rowType[] {
+): answerType {
   // Creating an instance of the Math.js parser
   const p = parser();
   // Parsing the user-defined function string and setting it as 'f' for use later
@@ -140,8 +140,6 @@ export function calcBisectionStandard(
   let temp_f_a = 0; // value of function at lower bound
 
   let temp_b = 0; // upper bound of the interval
-  let temp_f_b = 0; // value of function at upper bound
-
   let temp_f_a_f_c = 0; // value of f(a) * f(c)
   
   let temp_c = 0; // midpoint of the interval
@@ -178,11 +176,9 @@ export function calcBisectionStandard(
     if (funcType === functionTypeEnums.AnyFunction) {
       temp_d = useCustomFunc(temp_c)
       temp_f_a = useCustomFunc(temp_a);
-      temp_f_b = useCustomFunc(temp_b);
     } else {
       temp_d = Math.log(temp_c+1);
       temp_f_a = Math.log(temp_a+1);
-      temp_f_b = Math.log(temp_b+1);
     }
 
     // compute the value of f(a) * f(c)
@@ -190,7 +186,7 @@ export function calcBisectionStandard(
 
     // Calculating the absolute difference between temp_a and temp_b, and updating the boolean flag
     temp_e = Math.abs(temp_a - temp_b);
-    temp_less_than_error = temp_e < error;
+    temp_less_than_error = temp_e < error
 
     // Creating a new row object with all the relevant data for this iteration
     const row: rowType = {
@@ -218,7 +214,16 @@ export function calcBisectionStandard(
     }
   }
 
-  return rows;
+  // compute the final answers
+  const cn = rows.slice(-1)[0].b;                 
+  const f_cn = rows.slice(-1)[0].d;
+
+  // Return the rows array along with the final answers
+  return {
+    cn: cn,
+    f_cn: f_cn,
+    rows: rows
+  }
 }
 
 
@@ -245,7 +250,7 @@ export function calcBisectionOld(
   customFunc: string,
   iterations: number,
   error: number
-  ): rowType[] {
+  ): answerType {
   // Creating an instance of the Math.js parser
   const p = parser();
   // Parsing the user-defined function string and setting it as 'f' for use later
@@ -322,5 +327,14 @@ export function calcBisectionOld(
     }
   }
 
-  return rows;
+  // compute the final answers
+  const cn = rows.slice(-1)[0].b;                 
+  const f_cn = useCustomFunc(rows.slice(-1)[0].d);
+
+  // Return the rows array along with the final answers
+  return {
+    cn: cn,
+    f_cn: f_cn,
+    rows: rows
+  }
 }

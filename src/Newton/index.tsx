@@ -155,6 +155,27 @@ export default function Newton() {
     })
   }
 
+  const getResultTable = () => {
+    const result = calcNewton(
+      parseFloat(data.xn),
+      data.funcType,
+      data.customFunc,
+      data.iterations,
+      parseFloat(data.error))
+    
+    return (
+      <ResultTable 
+        rows={result.rows}
+        cn={result.cn}
+        f_cn={result.f_cn}
+        funcType={data.funcType}
+        customFunc={formatFunc(data.customFunc, 'Xn')}
+        firstDerivativeFunc={get1stDerivative(data.customFunc,'x')}
+        methodType={methodTypeEnums.Newton} 
+      />
+    )
+  }
+
   console.log("Data")
   console.table(data)
   if (showAnswer === true) {
@@ -329,19 +350,7 @@ export default function Newton() {
             />
           </ListItem>
         </Paper>}
-        {showAnswer === true && <ResultTable 
-          rows={calcNewton(
-            parseFloat(data.xn),
-            data.funcType,
-            data.customFunc,
-            data.iterations,
-            parseFloat(data.error)
-          )} 
-          funcType={data.funcType}
-          customFunc={formatFunc(data.customFunc, 'Xn')}
-          firstDerivativeFunc={get1stDerivative(data.customFunc,'x')}
-          methodType={methodTypeEnums.Newton} 
-        />}
+        {showAnswer === true && getResultTable()}
         <RedoBtn handleClick={toggleShowAnswer} />
       </Collapse>
       <Snackbar

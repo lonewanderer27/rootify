@@ -42,6 +42,12 @@ export type newtonDataError = {
   error: string
 }
 
+export type answerType = {
+  rows: rowsType,
+  cn: number,
+  f_cn: number
+}
+
 export type rowType = {
   n: number,
   a: number,

@@ -202,6 +202,28 @@ export default function Bisection() {
     })
   }
 
+  const getResultTable = () => {
+    const result = calcBisection(
+      parseFloat(data.a),
+      parseFloat(data.b),
+      data.funcType,
+      data.customFunc,
+      data.iterations,
+      parseFloat(data.error),
+      data.standardMethod)
+    
+    return (
+      <ResultTable 
+        rows={result.rows}
+        funcType={data.funcType}
+        customFunc={data.customFunc}
+        methodType={methodTypeEnums.Bisection}
+        cn={result.cn}
+        f_cn={result.f_cn}
+      />
+    )
+  }
+
   console.table(data)
 
   return (
@@ -414,19 +436,7 @@ export default function Bisection() {
             />
           </ListItem>
         </Paper>}
-        {showAnswer === true && <ResultTable 
-          rows={calcBisection(
-            parseFloat(data.a),
-            parseFloat(data.b),
-            data.funcType,
-            data.customFunc,
-            data.iterations,
-            parseFloat(data.error),
-            data.standardMethod
-          )} 
-          funcType={data.funcType}
-          customFunc={data.customFunc}
-          methodType={methodTypeEnums.Bisection} />}
+        {showAnswer === true && getResultTable()}
         <RedoBtn handleClick={toggleShowAnswer} />
       </Collapse>
       <Snackbar

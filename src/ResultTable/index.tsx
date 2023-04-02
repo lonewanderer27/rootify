@@ -11,6 +11,8 @@ import { tableCellClasses } from '@mui/material/TableCell';
 
 export default function ResultTable(props: {
   rows: rowsType, 
+  cn: number,
+  f_cn: number,
   funcType?: functionTypeEnums,
   customFunc?: string,
   firstDerivativeFunc?: MathNode,
@@ -96,10 +98,17 @@ export default function ResultTable(props: {
       </TableContainer>
       {props.rows.slice(-1)[0].less_than_error === false && 
       <Alert severity="info">
-        <AlertTitle>Tip</AlertTitle>
-        We still haven't reached the root on {props.rows.length} iteration.  <br/>
+        <AlertTitle>Root not (yet) found</AlertTitle>
+        We still haven't reached the root on iteration {props.rows.length}. <br/>
         Click the REDO button below, increase the maximum number of iterations, then try again.
-      </Alert> }
+      </Alert>}
+      {props.rows.slice(-1)[0].less_than_error === true && 
+      <Alert severity="success">
+        <AlertTitle>Less than E at iteration {props.rows.length}!</AlertTitle><br/>
+        <AlertTitle>Final Answer: </AlertTitle>
+          Cn = {props.cn}<br/>
+          f(Cn) = {props.f_cn}
+      </Alert>}
     </Paper>
     
   )
