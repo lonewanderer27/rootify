@@ -5,6 +5,7 @@ import calcBisection, { testBisectionInterval } from "../calculators/bisection";
 import { defaultScreenCSS, drawerWidth, inputWidth } from "../App";
 import { formatFunc, testFunc } from "../calculators/misc";
 import { functionTypeEnums, methodTypeEnums } from "../enums";
+import { hasInvalidCharacters, invalidError } from "../Checkers";
 
 import Alert from "@mui/material/Alert";
 import Avatar from "@mui/material/Avatar"
@@ -133,13 +134,13 @@ export default function Bisection() {
     let success = true;
 
     // Checking if interval a contains invalid characters or is empty
-    if (REGEXLETTERS.test(data.a) || data.a.length === 0) {
+    if (hasInvalidCharacters(data.a) === true) {
       setDataError((prev) => ({...prev, a: "Invalid Number"}))
       success = false;
     }
     
     // Checking if interval b contains invalid characters or is empty
-    if (REGEXLETTERS.test(data.b) || data.b.length === 0) {
+    if (hasInvalidCharacters(data.b) === true) {
       setDataError((prev) => ({...prev, b: "Invalid Number"}))
       success = false;
     }
@@ -154,12 +155,7 @@ export default function Bisection() {
     }
 
     // Checking if error contains invalid characters, is empty or is equal to '0.' or '0'
-    if (
-      REGEXLETTERS.test(data.error) || 
-      data.error.length === 0 || 
-      data.error === "0." || 
-      data.error === "0"
-    ) {
+    if (invalidError(data.error) === true) {
       // If error is invalid, set the error message and set success to false
       setDataError((prev) => ({...prev, error: "Invalid Number"}))
       success = false;
