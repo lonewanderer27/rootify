@@ -39,6 +39,11 @@ export function testBisectionInterval(
     success = false;
   }
 
+  // Checking if f(a) or f(b) is 0
+  if (Math.sign(f_a) === 0 || Math.sign(f_b) === 0) {
+    success = false;
+  }
+
   // Return the result of the test
   return success;
 }
