@@ -29,12 +29,21 @@ export const defaultScreenCSS = {
 }
 
 function App() {
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(() => false);
   const [methodType, setMethodType] = useState<methodTypeEnums | null>(() => methodTypeEnums.Bisection);
 
-  const switchToBisection = () => setMethodType(() => methodTypeEnums.Bisection);
-  const switchToNewton = () => setMethodType(() => methodTypeEnums.Newton);
-  const switchToAbout = () => setMethodType(() => null);
+  const switchToBisection = () => setMethodType(() => {
+    setMobileOpen(false)
+    return methodTypeEnums.Bisection;
+  });
+  const switchToNewton = () => setMethodType(() => {
+    setMobileOpen(false)
+    return methodTypeEnums.Newton;
+  });
+  const switchToAbout = () => setMethodType(() => {
+    setMobileOpen(false)
+    return null;
+  });
 
   const handleDrawerToggle = () => setMobileOpen((prev) => !prev);
 
@@ -72,6 +81,8 @@ function App() {
   );
 
   const container = document.body;
+
+  console.log(`Drawer is ${mobileOpen ? "open" : "closed"}`)
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -126,7 +137,8 @@ function App() {
             display: { xs: 'none', sm: 'block' },
             '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
           }}
-          open
+          open={mobileOpen}
+          onClose={handleDrawerToggle}
         >
           {drawer}
         </Drawer>

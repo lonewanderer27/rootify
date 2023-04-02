@@ -64,7 +64,8 @@ export default function Bisection() {
     setShowAnswer(showAnswer2);
   }, [])
 
-  console.log("Data: ", data)
+  console.log("Data:")
+  console.table(data)
 
   if (showAnswer === true) {
     calcBisection(
@@ -194,7 +195,7 @@ export default function Bisection() {
             <Box
               component="form"
               sx={{
-                '& > :not(style)': { m: 1, width: inputWidth },
+                '& > :not(style)': { m: { xs: 0, sm: 1 }, width: inputWidth },
               }}
               autoComplete="off"
             >
@@ -227,7 +228,7 @@ export default function Bisection() {
             <Box
               component="form"
               sx={{
-                '& > :not(style)': { m: 1, width: inputWidth },
+                '& > :not(style)': { m: { xs: 0, sm: 1 }, width: inputWidth },
               }}
               autoComplete="off"
             >
@@ -271,7 +272,7 @@ export default function Bisection() {
             <Box
               component="form"
               sx={{
-                '& > :not(style)': { m: 1,width: inputWidth },
+                '& > :not(style)': { m: { xs: 0, sm: 1 }, width: inputWidth },
               }}
               autoComplete="off"
             >
@@ -293,7 +294,7 @@ export default function Bisection() {
             <Box
               component="form"
               sx={{
-                '& > :not(style)': { m: 1, width: inputWidth },
+                '& > :not(style)': { m: { xs: 0, sm: 1 }, width: inputWidth },
               }}
               autoComplete="off"
             >
@@ -317,7 +318,7 @@ export default function Bisection() {
             <Box
               component="form"
               sx={{
-                '& > :not(style)': { m: 1, width: inputWidth },
+                '& > :not(style)': { m: { xs: 0, sm: 1 }, width: '100%' },
               }}
               autoComplete="off"
             >

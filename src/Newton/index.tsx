@@ -146,7 +146,18 @@ export default function Newton() {
     })
   }
 
+  console.log("Data")
   console.table(data)
+  if (showAnswer === true) {
+    calcNewton(
+      parseFloat(data.xn),
+      data.funcType,
+      data.customFunc,
+      data.iterations,
+      parseFloat(data.error),
+    )
+  }
+
 
   return (
     <Box
@@ -161,7 +172,7 @@ export default function Newton() {
             <Box
               component="form"
               sx={{
-                '& > :not(style)': { m: 1, width: inputWidth },
+                '& > :not(style)': { m: { xs: 0, sm: 1 }, width: inputWidth },
               }}
               autoComplete="off"
             >
@@ -183,7 +194,7 @@ export default function Newton() {
             <Box
               component="form"
               sx={{
-                '& > :not(style)': { m: 1, width: inputWidth },
+                '& > :not(style)': { m: { xs: 0, sm: 1 }, width: inputWidth },
               }}
               autoComplete="off"
             >
@@ -224,7 +235,7 @@ export default function Newton() {
             <Box
               component="form"
               sx={{
-                '& > :not(style)': { m: 1, width: inputWidth },
+                '& > :not(style)': { m: { xs: 0, sm: 1 }, width: inputWidth },
               }}
               autoComplete="off"
             >
@@ -246,7 +257,7 @@ export default function Newton() {
             <Box
               component="form"
               sx={{
-                '& > :not(style)': { m: 1, width: inputWidth },
+                '& > :not(style)': { m: { xs: 0, sm: 1 }, width: inputWidth },
               }}
               autoComplete="off"
             >

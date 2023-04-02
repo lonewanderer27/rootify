@@ -35,7 +35,9 @@ export default function About(){
         <Typography variant="h5" gutterBottom>
           Who developed this awesome app?
         </Typography>
-        <div style={{display: "flex"}}>
+        <Grid container>
+
+          <Grid item sm={12} md={6} lg={5}>
           <DeveloperCard
             name="Mark Bonifacio"
             caption="Software Engineer"
@@ -59,6 +61,8 @@ export default function About(){
               },
             ]}      
           />
+          </Grid>
+          <Grid item  sm={12} md={6} lg={5}>
           <DeveloperCard
             name="Adriane James"
             caption="Full Stack Web Dev"
@@ -82,7 +86,8 @@ export default function About(){
               },
             ]}      
           />
-        </div>
+          </Grid>
+        </Grid>
       </Box>
     </Box>
   )
