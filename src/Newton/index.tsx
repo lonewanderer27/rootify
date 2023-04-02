@@ -4,6 +4,7 @@ import { drawerWidth, inputWidth } from "../App";
 import { formatFunc, testFunc } from "../calculators/misc";
 import { functionTypeEnums, methodTypeEnums } from "../enums";
 
+import Alert from "@mui/material/Alert";
 import Avatar from "@mui/material/Avatar"
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip"
@@ -11,10 +12,12 @@ import Collapse from '@mui/material/Collapse';
 import FormControlLabel from "@mui/material/FormControlLabel"
 import Grid from "@mui/material/Grid";
 import Paper from '@mui/material/Paper';
+import { REGEXLETTERS } from "../constants";
 import Radio from "@mui/material/Radio"
 import RadioGroup from "@mui/material/RadioGroup"
 import RedoBtn from "../Buttons/RedoBtn";
 import ResultTable from "../ResultTable";
+import Snackbar from "@mui/material/Snackbar";
 import SolveBtn from "../Buttons/SolveBtn";
 import Stack from "@mui/material/Stack"
 import TextField from "@mui/material/TextField";
@@ -57,14 +60,21 @@ export default function Newton() {
     customFunc: "",
     error: ""
   }));
+  const [dataErrorNoticeOpen, setDataErrorNoticeOpen] = useState(() => false);
+
+  const handleDataErrorNoticeClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setDataErrorNoticeOpen(() => false)
+  }
 
   useEffect(() => {
     const newtonData = JSON.parse(localStorage.getItem("rootify--newtonData")!)
     if (newtonData) {
       setData(newtonData);
     }
-    const showAnswer2 = JSON.parse(localStorage.getItem("rootify--showNewtonAnswer")!)
-    setShowAnswer(showAnswer2);
   }, [])
 
   function resetDataErrorToBlank() {
@@ -84,6 +94,7 @@ export default function Newton() {
       // going to show the answer
       if (!prev) {
         if (verifyInputs(data) === false) {
+          setDataErrorNoticeOpen(() => true)
           return newState;
         } else {
           newState = !newState;
@@ -93,8 +104,6 @@ export default function Newton() {
 
       // going to remodify the values
       newState = !newState;
-
-      localStorage.setItem("rootify--showNewtonAnswer", newState+"");
       return newState;
     })
     
@@ -102,30 +111,37 @@ export default function Newton() {
   };
 
   const verifyInputs = (data: newtonData) => {
-    const regexLetters = /[^0-9+\-,.\s]/;
-
+    // Initializing the success variable to true
     let success = true;
-    if (regexLetters.test(data.xn) || data.xn.length === 0) {
+    
+    // Checking if Xn contains invalid characters or is empty
+    if (REGEXLETTERS.test(data.xn) || data.xn.length === 0) {
       setDataError((prev) => ({...prev, xn: "Invalid Number"}))
       success = false;
     }
 
+    // Checking if error contains invalid characters, is empty or is equal to '0.' or '0'
     if (
-      regexLetters.test(data.error) || 
+      REGEXLETTERS.test(data.error) || 
       data.error.length === 0 || 
       data.error === "0." || 
       data.error === "0"
     ) {
+      // If error is invalid, set the error message and set success to false
       setDataError((prev) => ({...prev, error: "Invalid Number"}))
       success = false;
     }
     
+    // Checking if 'iterations' is less than or equal to zero or greater than 100
     if (data.iterations <= 0 || data.iterations > 100) {
+      // If 'iterations' is invalid, set the error message and set success to false
       setDataError((prev) => ({...prev, iterations: "Needs to be greater than zero or less than 100"}))
       success = false;
     }
 
+    // Checking if the function type is 'AnyFunction' and the custom function is invalid
     if (data.funcType === functionTypeEnums.AnyFunction && testFunc(data.customFunc) === false) {
+      // If the function is invalid, set the error message and set success to false
       setDataError((prev) => ({...prev, customFunc: 'Invalid function'}))
       success = false;
     }
@@ -253,7 +269,7 @@ export default function Newton() {
             </Box>         
           </Item>
           <Item variant="outlined">
-            <Typography variant="h6" color="InfoText">Enter the number of iterations</Typography>
+            <Typography variant="h6" color="InfoText">Enter the maximum number of iterations</Typography>
             <Box
               component="form"
               sx={{
@@ -267,7 +283,7 @@ export default function Newton() {
                 helperText={dataError.iterations !== "" && dataError.iterations}
                 name="iterations"
                 id="input--iterations"
-                label="Value of iterations"
+                label="Max value of iterations"
                 type="number"
                 value={data.iterations}
                 variant="standard"
@@ -335,6 +351,15 @@ export default function Newton() {
         />}
         <RedoBtn handleClick={toggleShowAnswer} />
       </Collapse>
+      <Snackbar
+        open={dataErrorNoticeOpen}
+        autoHideDuration={6000}
+        onClose={handleDataErrorNoticeClose}
+      >
+        <Alert severity="error" onClose={handleDataErrorNoticeClose}>
+          Please fix the errors first then try again.
+        </Alert>
+      </Snackbar>
     </Box>
   )
 }

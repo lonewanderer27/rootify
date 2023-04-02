@@ -6,16 +6,22 @@ import { defaultScreenCSS, drawerWidth, inputWidth } from "../App";
 import { formatFunc, testFunc } from "../calculators/misc";
 import { functionTypeEnums, methodTypeEnums } from "../enums";
 
+import Alert from "@mui/material/Alert";
 import Avatar from "@mui/material/Avatar"
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip"
+import CloseIcon from '@mui/icons-material/Close';
 import Collapse from '@mui/material/Collapse';
 import FormControlLabel from "@mui/material/FormControlLabel"
+import IconButton from "@mui/material/IconButton";
 import Paper from '@mui/material/Paper';
+import { REGEXLETTERS } from "../constants";
 import Radio from "@mui/material/Radio"
 import RadioGroup from "@mui/material/RadioGroup"
 import RedoBtn from "../Buttons/RedoBtn";
 import ResultTable from "../ResultTable";
+import Snackbar from "@mui/material/Snackbar";
 import SolveBtn from "../Buttons/SolveBtn";
 import Stack from "@mui/material/Stack"
 import Switch from '@mui/material/Switch';
@@ -54,6 +60,15 @@ export default function Bisection() {
     iterations: "",
     error: ""
   }));
+  const [dataErrorNoticeOpen, setDataErrorNoticeOpen] = useState(() => false);
+
+  const handleDataErrorNoticeClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setDataErrorNoticeOpen(() => false)
+  }
 
   useEffect(() => {
     const bisectionData = JSON.parse(localStorage.getItem("rootify--bisectionData")!)
@@ -97,6 +112,7 @@ export default function Bisection() {
       // going to show the answer
       if (!prev) {
         if (verifyInputs(data) === false) {
+          setDataErrorNoticeOpen(() => true)
           return newState;
         } else {
           newState = !newState;
@@ -106,8 +122,6 @@ export default function Bisection() {
 
       // going to remodify the values
       newState = !newState;
-
-      localStorage.setItem("rootify--showBisectionAnswer", newState+"");
       return newState;
     })
 
@@ -115,20 +129,17 @@ export default function Bisection() {
   };
 
   const verifyInputs = (data: bisectionData) => {
-    // Defining a regular expression to match any character that is not a digit, plus sign, minus sign, comma, period or whitespace
-    const regexLetters = /[^0-9+\-,.\s]/;
-
     // Initializing the success variable to true
     let success = true;
 
     // Checking if interval a contains invalid characters or is empty
-    if (regexLetters.test(data.a) || data.a.length === 0) {
+    if (REGEXLETTERS.test(data.a) || data.a.length === 0) {
       setDataError((prev) => ({...prev, a: "Invalid Number"}))
       success = false;
     }
     
     // Checking if interval b contains invalid characters or is empty
-    if (regexLetters.test(data.b) || data.b.length === 0) {
+    if (REGEXLETTERS.test(data.b) || data.b.length === 0) {
       setDataError((prev) => ({...prev, b: "Invalid Number"}))
       success = false;
     }
@@ -144,7 +155,7 @@ export default function Bisection() {
 
     // Checking if error contains invalid characters, is empty or is equal to '0.' or '0'
     if (
-      regexLetters.test(data.error) || 
+      REGEXLETTERS.test(data.error) || 
       data.error.length === 0 || 
       data.error === "0." || 
       data.error === "0"
@@ -427,6 +438,13 @@ export default function Bisection() {
           methodType={methodTypeEnums.Bisection} />}
         <RedoBtn handleClick={toggleShowAnswer} />
       </Collapse>
+      <Snackbar
+        open={dataErrorNoticeOpen}
+        autoHideDuration={6000}
+        onClose={handleDataErrorNoticeClose}
+      >
+        <Alert severity="error" onClose={handleDataErrorNoticeClose}>Please fix the errors first then try again.</Alert>
+      </Snackbar>
     </Box>
   )
 }
