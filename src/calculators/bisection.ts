@@ -50,7 +50,7 @@ export function testBisectionInterval(
   ]
 
   // Checking if f(a) or f(b) is 0
-  if (response.f_a_sign === 0 || response.f_b_sign === 0) {
+  if (response.f_a === 0 || response.f_b === 0) {
     response.errorMessages.push(`f(a) or f(b) cannot have 0 as result`)
     response.success = false;
   } else {
