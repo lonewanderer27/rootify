@@ -95,7 +95,6 @@ function App() {
         }}
       >
         <Toolbar>
-          <img src="/logo.png" style={{width: "40px", height: "auto", marginRight: "20px"}} />
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -105,6 +104,7 @@ function App() {
           >
             <MenuIcon />
           </IconButton>
+          <img src="/logo.png" style={{width: "40px", height: "auto", marginRight: "20px"}} />
           <Typography variant="h6" noWrap component="div" sx={{marginRight: "auto"}}>
             {methodType === methodTypeEnums.Bisection && "Bisection"}
             {methodType === methodTypeEnums.Newton && "Newton"} 
