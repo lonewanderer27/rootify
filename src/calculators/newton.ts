@@ -99,8 +99,13 @@ export default function calcNewton(
   }
 
   // compute the final answers
-  const cn = rows.slice(-1)[0].a;                 
-  const f_cn = useCustomFunc(cn);
+  const cn = rows.slice(-1)[0].d;
+  let f_cn = 0;
+  if (funcType === functionTypeEnums.AnyFunction){
+    f_cn = useCustomFunc(cn);
+  } else {
+    f_cn = Math.log(cn+1)
+  }               
 
   // Return the rows array along with the final answers
   return {

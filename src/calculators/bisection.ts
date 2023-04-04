@@ -215,8 +215,13 @@ export function calcBisectionStandard(
   }
 
   // compute the final answers
-  const cn = rows.slice(-1)[0].b;                 
-  const f_cn = rows.slice(-1)[0].d;
+  const cn = rows.slice(-1)[0].c; 
+  let f_cn = 0;                
+  if (funcType === functionTypeEnums.AnyFunction){
+    f_cn = useCustomFunc(rows.slice(-1)[0].c);
+  } else {
+    f_cn = Math.log(rows.slice(-1)[0].c)
+  }
 
   // Return the rows array along with the final answers
   return {
@@ -328,8 +333,14 @@ export function calcBisectionOld(
   }
 
   // compute the final answers
-  const cn = rows.slice(-1)[0].b;                 
-  const f_cn = useCustomFunc(rows.slice(-1)[0].d);
+  const cn = rows.slice(-1)[0].c; 
+  let f_cn = 0;                
+  if (funcType === functionTypeEnums.AnyFunction){
+    f_cn = useCustomFunc(rows.slice(-1)[0].c);
+  } else {
+    f_cn = Math.log(rows.slice(-1)[0].c)
+  }
+  
 
   // Return the rows array along with the final answers
   return {
