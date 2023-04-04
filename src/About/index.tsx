@@ -18,6 +18,7 @@ export default function About(){
       sx={{ flexGrow: 1, width: { sm: `calc(100% - ${drawerWidth}px)` }, ...defaultScreenCSS }}
     > 
       <Toolbar/>
+      <img src="/logo.png" style={{marginBottom: "20px", height: "100px", width: "auto"}} />
       <Typography paragraph>
       Rootify is a numerical methods tool built using React. It allows users to calculate the roots of a function using two different methods: the bisection method and the Newton-Raphson method.
       </Typography>

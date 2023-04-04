@@ -95,6 +95,7 @@ function App() {
         }}
       >
         <Toolbar>
+          <img src="/logo.png" style={{width: "40px", height: "auto", marginRight: "20px"}} />
           <IconButton
             color="inherit"
             aria-label="open drawer"
