@@ -365,7 +365,7 @@ export default function Bisection() {
               />
             </Box>         
           </Item>
-          <Item variant="outlined">
+          {/* <Item variant="outlined">
             <Typography variant="h6" color="InfoText">Choose the algorithm that will be used</Typography>
             <Typography variant="caption">Do not change unless absolutely necessary</Typography><br/>
             <Typography variant="caption">Default is Standard Method</Typography>
@@ -391,7 +391,7 @@ export default function Bisection() {
                 {`If f(c) is negative, then new interval is [c, b]`}
               </Typography>
             </Box>
-          </Item>
+          </Item> */}
         </Stack>
         <SolveBtn handleClick={toggleShowAnswer} />
       </Collapse>
