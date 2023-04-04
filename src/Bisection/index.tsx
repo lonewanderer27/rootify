@@ -40,6 +40,8 @@ const Item = styled(Paper)(({ theme }) => ({
 
 export default function Bisection() {
   const [showAnswer, setShowAnswer] = useState(() => false);
+  const [displayOneAnswer, setDisplayOneAnswer] = useState(() => false);
+  const toggleOneAnswer = () => setDisplayOneAnswer((prev) => !prev);
   const [data, setData] = useState<bisectionData>(() => ({
     a: "",
     b: "",
@@ -220,6 +222,7 @@ export default function Bisection() {
         methodType={methodTypeEnums.Bisection}
         cn={result.cn}
         f_cn={result.f_cn}
+        displayOneAnswer={displayOneAnswer}
       />
     )
   }
@@ -362,6 +365,10 @@ export default function Bisection() {
                 variant="standard"
                 onChange={handleChange} 
                 inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+              />
+              <FormControlLabel
+                control={<Switch checked={!displayOneAnswer} onChange={toggleOneAnswer} />}
+                label={displayOneAnswer ? "Display one answer only" : "Display all answers" }
               />
             </Box>         
           </Item>

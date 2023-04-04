@@ -10,6 +10,7 @@ import { styled } from "@mui/material";
 import { tableCellClasses } from '@mui/material/TableCell';
 
 export default function ResultTable(props: {
+  displayOneAnswer?: boolean,
   rows: rowsType, 
   cn: number,
   f_cn: number,
@@ -80,7 +81,7 @@ export default function ResultTable(props: {
             </TableRow>
           </TableHead>
           <TableBody>
-            {props.rows.map((row) => {
+            {props.displayOneAnswer === false && props.rows.map((row) => {
               return (
                 <StyledTableRow key={nanoid()}>
                   <StyledTableCell key={nanoid()}>{row.n}</StyledTableCell>
@@ -93,6 +94,17 @@ export default function ResultTable(props: {
                 </StyledTableRow>
               )
             })}
+            {props.displayOneAnswer === true &&
+                <StyledTableRow key={nanoid()}>
+                  <StyledTableCell key={nanoid()}>{props.rows.slice(-1)[0].n}</StyledTableCell>
+                  <StyledTableCell key={nanoid()}>{props.rows.slice(-1)[0].a}</StyledTableCell>
+                  <StyledTableCell key={nanoid()}>{props.rows.slice(-1)[0].b}</StyledTableCell>
+                  <StyledTableCell key={nanoid()}>{props.rows.slice(-1)[0].c}</StyledTableCell>
+                  <StyledTableCell key={nanoid()}>{props.rows.slice(-1)[0].d}</StyledTableCell>
+                  <StyledTableCell key={nanoid()}>{props.rows.slice(-1)[0].e}</StyledTableCell>
+                  <StyledTableCell key={nanoid()}>{props.rows.slice(-1)[0].less_than_error === true ? <CheckIcon/> : <CloseIcon/>}</StyledTableCell>
+                </StyledTableRow>
+            }
           </TableBody>
         </Table>
       </TableContainer>

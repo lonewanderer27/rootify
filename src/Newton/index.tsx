@@ -19,6 +19,7 @@ import ResultTable from "../ResultTable";
 import Snackbar from "@mui/material/Snackbar";
 import SolveBtn from "../Buttons/SolveBtn";
 import Stack from "@mui/material/Stack"
+import Switch from "@mui/material/Switch";
 import TextField from "@mui/material/TextField";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
@@ -45,6 +46,8 @@ const Item = styled(Paper)(({ theme }) => ({
 
 export default function Newton() {
   const [showAnswer, setShowAnswer] = useState(() => false);
+  const [displayOneAnswer, setDisplayOneAnswer] = useState(() => false);
+  const toggleOneAnswer = () => setDisplayOneAnswer((prev) => !prev);
   const [data, setData] = useState<newtonData>(() => ({
     xn: "",
     iterations: 0,
@@ -172,6 +175,7 @@ export default function Newton() {
         customFunc={formatFunc(data.customFunc, 'Xn')}
         firstDerivativeFunc={get1stDerivative(data.customFunc,'x')}
         methodType={methodTypeEnums.Newton} 
+        displayOneAnswer={displayOneAnswer}
       />
     )
   }
@@ -303,6 +307,10 @@ export default function Newton() {
                 variant="standard"
                 onChange={handleChange} 
                 inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+              />
+              <FormControlLabel
+                control={<Switch checked={!displayOneAnswer} onChange={toggleOneAnswer} />}
+                label={displayOneAnswer ? "Display one answer only" : "Display all answers" }
               />
             </Box>         
           </Item>
