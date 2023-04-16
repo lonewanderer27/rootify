@@ -4,6 +4,7 @@ import AppBar from '@mui/material/AppBar';
 import Bisection from './Bisection';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
+import DeviceHubIcon from '@mui/icons-material/DeviceHub';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import ForkRightIcon from '@mui/icons-material/ForkRight';
@@ -16,6 +17,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import MenuIcon from '@mui/icons-material/Menu';
 import Newton from './Newton';
+import Secant from './Secant';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { methodTypeEnums } from './enums';
@@ -40,6 +42,10 @@ function App() {
     setMobileOpen(false)
     return methodTypeEnums.Newton;
   });
+  const switchToSecant = () => setMethodType(() => {
+    setMobileOpen(false)
+    return methodTypeEnums.Secant;
+  });
   const switchToAbout = () => setMethodType(() => {
     setMobileOpen(false)
     return null;
@@ -52,14 +58,22 @@ function App() {
       <Toolbar />
       <Divider />
       <List>
-        {[methodTypeEnums.Bisection, methodTypeEnums.Newton].map((text, index) => (
+        {[methodTypeEnums.Bisection, methodTypeEnums.Newton, methodTypeEnums.Secant].map((text, index) => (
           <ListItem 
             key={text} 
-            onClick={text === methodTypeEnums.Bisection ? switchToBisection : switchToNewton}
+            onClick={() => {
+              switch(index) {
+                case 0: return switchToBisection();
+                case 1: return switchToNewton();
+                case 2: return switchToSecant();
+              }
+            }}
           >
             <ListItemButton>
               <ListItemIcon>
-                {index === 0 ? <ForkRightIcon /> : <AcUnitIcon/>}
+                {index === 1 && <ForkRightIcon />}
+                {index === 0 && <AcUnitIcon />}
+                {index === 2 && <DeviceHubIcon />}
               </ListItemIcon>
               <ListItemText primary={text} />
             </ListItemButton>
@@ -108,6 +122,7 @@ function App() {
           <Typography variant="h6" noWrap component="div" sx={{marginRight: "auto"}}>
             {methodType === methodTypeEnums.Bisection && "Bisection"}
             {methodType === methodTypeEnums.Newton && "Newton"} 
+            {methodType === methodTypeEnums.Secant && "Secant"}
             {methodType === null ? "About Rootify" : " Method"}
           </Typography>
         </Toolbar>
@@ -147,6 +162,7 @@ function App() {
 
       {methodType === methodTypeEnums.Bisection && <Bisection />}
       {methodType === methodTypeEnums.Newton && <Newton />}
+      {methodType === methodTypeEnums.Secant && <Secant />}
       {methodType === null && <About/>}
     </Box>
   );

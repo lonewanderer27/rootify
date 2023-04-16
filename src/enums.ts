@@ -5,5 +5,6 @@ export enum functionTypeEnums {
 
 export enum methodTypeEnums {
   Bisection = "Bisection",
-  Newton = "Newton"
+  Newton = "Newton",
+  Secant = "Secant"
 }
