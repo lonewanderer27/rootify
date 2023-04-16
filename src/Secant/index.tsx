@@ -1,3 +1,4 @@
+import ResultTable, { replacefx } from "../ResultTable";
 import { defaultScreenCSS, drawerWidth, inputWidth } from "../App";
 import { formatFunc, testFunc } from "../calculators/misc";
 import { functionTypeEnums, methodTypeEnums } from "../enums";
@@ -16,7 +17,6 @@ import Paper from "@mui/material/Paper";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import RedoBtn from "../Buttons/RedoBtn";
-import ResultTable from "../ResultTable";
 import Snackbar from "@mui/material/Snackbar";
 import SolveBtn from "../Buttons/SolveBtn";
 import Stack from "@mui/material/Stack";
@@ -362,12 +362,12 @@ export default function Secant() {
           </ListItem>
           <ListItem>
             <Chip
-              label={`${data.funcType === functionTypeEnums.LogFunction ? "f(Xn-1) = ln(x+1)" : formatFunc(data.customFunc, 'Xn-1')}`} 
+              label={`${data.funcType === functionTypeEnums.LogFunction ? "f(Xn-1) = ln(x+1)" : replacefx(data.customFunc, 'Xn-1')}`} 
             />
           </ListItem>
           <ListItem>
             <Chip
-              label={`${data.funcType === functionTypeEnums.LogFunction ? "f(Xn) = ln(x+1)" : formatFunc(data.customFunc, 'Xn')}`} 
+              label={`${data.funcType === functionTypeEnums.LogFunction ? "f(Xn) = ln(x+1)" : replacefx(data.customFunc, 'Xn')}`} 
             />
           </ListItem>
           <ListItem>
