@@ -60,14 +60,24 @@ export default function ResultTable(props: {
       'Xn + 1',
       '| Xn+1 - Xn |',
       '< E'
+    ],
+    secant: [
+      'Iteration',
+      'Xn-1',
+      'Xn',
+      props.funcType === functionTypeEnums.LogFunction ? "f(Xn-1) = ln(x+1)" : props.customFunc,
+      props.funcType === functionTypeEnums.LogFunction ? "f(Xn) = ln(x+1)" : props.customFunc,
+      'Xn+1',
+      '| Xn+1 - Xn |',
+      '< E'
     ]
   }
   
   const getHeader = (): any[] => {
-    if (props.methodType === methodTypeEnums.Bisection){
-      return headers.bisection
-    } else {
-      return headers.newton
+    switch(props.methodType){
+      case methodTypeEnums.Bisection: return headers.bisection;
+      case methodTypeEnums.Newton: return headers.newton;
+      case methodTypeEnums.Secant: return headers.secant;
     }
   }
 
@@ -90,6 +100,7 @@ export default function ResultTable(props: {
                   <StyledTableCell key={nanoid()}>{row.c}</StyledTableCell>
                   <StyledTableCell key={nanoid()}>{row.d}</StyledTableCell>
                   <StyledTableCell key={nanoid()}>{row.e}</StyledTableCell>
+                  {props.methodType === methodTypeEnums.Secant && <StyledTableCell key={nanoid()}>{row.f}</StyledTableCell>}
                   <StyledTableCell key={nanoid()}>{row.less_than_error === true ? <CheckIcon/> : <CloseIcon/>}</StyledTableCell>
                 </StyledTableRow>
               )
@@ -102,10 +113,13 @@ export default function ResultTable(props: {
                   <StyledTableCell key={nanoid()}>{props.rows.slice(-1)[0].c}</StyledTableCell>
                   <StyledTableCell key={nanoid()}>{props.rows.slice(-1)[0].d}</StyledTableCell>
                   <StyledTableCell key={nanoid()}>{props.rows.slice(-1)[0].e}</StyledTableCell>
+                  {props.methodType === methodTypeEnums.Secant && 
+                    <StyledTableCell key={nanoid()}>{props.rows.slice(-1)[0].f}</StyledTableCell>}
                   <StyledTableCell key={nanoid()}>{props.rows.slice(-1)[0].less_than_error === true ? <CheckIcon/> : <CloseIcon/>}</StyledTableCell>
                 </StyledTableRow>
             }
           </TableBody>
+          {}
         </Table>
       </TableContainer>
       {props.rows.slice(-1)[0].less_than_error === false && 

@@ -42,6 +42,23 @@ export type newtonDataError = {
   error: string
 }
 
+export type secantData = {
+  xn_1: string,
+  xn: string,
+  funcType: functionTypeEnums,
+  customFunc: string,
+  iterations: number,
+  error: string
+}
+
+export type secantDataError = {
+  xn_1: string,
+  xn: string,
+  customFunc: string,
+  iterations: string,
+  error: string
+}
+
 export type answerType = {
   rows: rowsType,
   cn: number,
@@ -55,6 +72,7 @@ export type rowType = {
   c: number,
   d: number,
   e: number,
+  f?: number,
   less_than_error: boolean
 }
 
