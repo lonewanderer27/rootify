@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import ResultTable, { replacefx } from "../ResultTable";
 import { drawerWidth, inputWidth } from "../App";
 import { formatFunc, testFunc } from "../calculators/misc";
 import { functionTypeEnums, methodTypeEnums } from "../enums";
@@ -15,7 +16,6 @@ import Paper from '@mui/material/Paper';
 import Radio from "@mui/material/Radio"
 import RadioGroup from "@mui/material/RadioGroup"
 import RedoBtn from "../Buttons/RedoBtn";
-import ResultTable from "../ResultTable";
 import Snackbar from "@mui/material/Snackbar";
 import SolveBtn from "../Buttons/SolveBtn";
 import Stack from "@mui/material/Stack"
@@ -338,12 +338,12 @@ export default function Newton() {
           </ListItem>
           <ListItem>
             <Chip
-              label={`${data.funcType === functionTypeEnums.LogFunction ? "f(Xn) = ln(x+1)" : formatFunc(data.customFunc, 'Xn')}`} 
+              label={`${data.funcType === functionTypeEnums.LogFunction ? "f(Xn) = ln(x+1)" : replacefx(data.customFunc, 'Xn')}`} 
             />
           </ListItem>
           <ListItem>
             <Chip
-              label={`${data.funcType === functionTypeEnums.LogFunction ? "f'(Xn) = 1/(x+1)" : "f'(Xn) = "+get1stDerivative(data.customFunc,'x').toString()}`} 
+              label={`${data.funcType === functionTypeEnums.LogFunction ? "f'(Xn) = 1/(x+1)" : "f'(Xn) = "+ replacefx(get1stDerivative(data.customFunc,'x').toString(), 'Xn')}`} 
             />
           </ListItem>
           <ListItem>

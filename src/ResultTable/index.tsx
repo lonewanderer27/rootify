@@ -9,6 +9,10 @@ import { rowsType } from "../types";
 import { styled } from "@mui/material";
 import { tableCellClasses } from '@mui/material/TableCell';
 
+export const replacefx = (functionStr: string | undefined, xvar: string) => {
+  return functionStr!.replaceAll('f(x)', `f(${xvar})`)
+}
+
 export default function ResultTable(props: {
   displayOneAnswer?: boolean,
   rows: rowsType, 
@@ -48,14 +52,14 @@ export default function ResultTable(props: {
       'a',
       'b',
       'c = (a + b) / 2',
-      props.funcType === functionTypeEnums.LogFunction ? "f(c) = ln(x+1)" : props.customFunc,
+      props.funcType === functionTypeEnums.LogFunction ? "f(c) = ln(x+1)" : replacefx(props.customFunc, 'c'),
       '| a - b |',
       '< E'
     ],
     newton: [
       'Iteration',
       'Xn',
-      props.funcType === functionTypeEnums.LogFunction ? "f(Xn) = ln(x+1)" : props.customFunc,
+      props.funcType === functionTypeEnums.LogFunction ? "f(Xn) = ln(x+1)" : replacefx(props.customFunc, 'Xn'),
       props.funcType === functionTypeEnums.LogFunction ? "f'(Xn) = 1/(x+1)" :  `f'(Xn) = ${props.firstDerivativeFunc}`,
       'Xn + 1',
       '| Xn+1 - Xn |',
@@ -65,8 +69,8 @@ export default function ResultTable(props: {
       'Iteration',
       'Xn-1',
       'Xn',
-      props.funcType === functionTypeEnums.LogFunction ? "f(Xn-1) = ln(x+1)" : props.customFunc,
-      props.funcType === functionTypeEnums.LogFunction ? "f(Xn) = ln(x+1)" : props.customFunc,
+      props.funcType === functionTypeEnums.LogFunction ? "f(Xn-1) = ln(x+1)" : replacefx(props.customFunc, 'Xn-1'),
+      props.funcType === functionTypeEnums.LogFunction ? "f(Xn) = ln(x+1)" : replacefx(props.customFunc, 'Xn'),
       'Xn+1',
       '| Xn+1 - Xn |',
       '< E'

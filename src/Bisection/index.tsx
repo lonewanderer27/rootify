@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import ResultTable, { replacefx } from "../ResultTable";
 import { bisectionData, bisectionDataError } from "../types";
 import calcBisection, { testBisectionInterval } from "../calculators/bisection";
 import { defaultScreenCSS, drawerWidth, inputWidth } from "../App";
@@ -16,7 +17,6 @@ import Paper from '@mui/material/Paper';
 import Radio from "@mui/material/Radio"
 import RadioGroup from "@mui/material/RadioGroup"
 import RedoBtn from "../Buttons/RedoBtn";
-import ResultTable from "../ResultTable";
 import Snackbar from "@mui/material/Snackbar";
 import SolveBtn from "../Buttons/SolveBtn";
 import Stack from "@mui/material/Stack"
@@ -429,7 +429,7 @@ export default function Bisection() {
           </ListItem>
           <ListItem>
             <Chip
-              label={`${data.funcType === functionTypeEnums.LogFunction ? "f(x) = ln(x+1)" : formatFunc(data.customFunc, 'x')}`} 
+              label={`${data.funcType === functionTypeEnums.LogFunction ? "f(x) = ln(x+1)" : replacefx(data.customFunc, 'c')}`} 
             />
           </ListItem>
           <ListItem>
