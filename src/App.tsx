@@ -34,6 +34,11 @@ function App() {
   const [mobileOpen, setMobileOpen] = useState(() => false);
   const [methodType, setMethodType] = useState<methodTypeEnums | null>(() => methodTypeEnums.Bisection);
 
+  const queryParams = new URLSearchParams(window.location.search)
+  const enableSecant = queryParams.get("secant") === "true" ? true : false
+  
+  console.log("SECANT ENABLED: " + enableSecant)
+
   const switchToBisection = () => setMethodType(() => {
     setMobileOpen(false)
     return methodTypeEnums.Bisection;
@@ -53,12 +58,21 @@ function App() {
 
   const handleDrawerToggle = () => setMobileOpen((prev) => !prev);
 
+  const availableMethodTypes = () => {
+    if (enableSecant) {
+      return [methodTypeEnums.Bisection, methodTypeEnums.Newton, methodTypeEnums.Secant]
+    } else {
+      return [methodTypeEnums.Bisection, methodTypeEnums.Newton]      
+    }
+  }
+  
+
   const drawer = (
     <div>
       <Toolbar />
       <Divider />
       <List>
-        {[methodTypeEnums.Bisection, methodTypeEnums.Newton, methodTypeEnums.Secant].map((text, index) => (
+        {availableMethodTypes().map((text, index) => (
           <ListItem 
             key={text} 
             onClick={() => {
@@ -73,7 +87,7 @@ function App() {
               <ListItemIcon>
                 {index === 1 && <ForkRightIcon />}
                 {index === 0 && <AcUnitIcon />}
-                {index === 2 && <DeviceHubIcon />}
+                {enableSecant && index === 2 && <DeviceHubIcon />}
               </ListItemIcon>
               <ListItemText primary={text} />
             </ListItemButton>
