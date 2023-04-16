@@ -22,6 +22,7 @@ import SolveBtn from "../Buttons/SolveBtn";
 import Stack from "@mui/material/Stack";
 import Switch from "@mui/material/Switch";
 import TextField from "@mui/material/TextField";
+import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import calcSecant from "../calculators/secant";
 import { styled } from "@mui/material/styles";
@@ -189,10 +190,11 @@ export default function Secant() {
       component="main"
       sx={{ flexGrow: 1, width: { xs: `calc(100% - ${drawerWidth}px)` }, ...defaultScreenCSS }}
     >
+      <Toolbar/>
       <Collapse in={!showAnswer}>
         <Stack spacing={2}>
           <Item variant="outlined">
-            <Typography variant="h6">Enter the Xn</Typography>
+            <Typography variant="h6" color="InfoText">Enter the Xn-1</Typography>
             <Box
               component="form"
               sx={{
@@ -214,7 +216,7 @@ export default function Secant() {
             </Box>
           </Item>
           <Item variant="outlined">
-            <Typography variant="h6">Enter the Xn</Typography>
+            <Typography variant="h6" color="InfoText">Enter the Xn</Typography>
             <Box
               component="form"
               sx={{
