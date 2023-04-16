@@ -24,6 +24,10 @@ export default function About(){
       </Typography>
 
       <Typography paragraph>
+      The third method, Secant, is also available but it is hidden by default. To gain access to the Secant method, just click this url: <a href={`${window.location.origin}?secant=true`}>{`${window.location.origin}?secant=true`}</a>
+      </Typography>
+
+      <Typography paragraph>
       Users can enter a mathematical function, specify the method they want to use, and set parameters such as the initial interval and the maximum number of iterations. This website will then generate a table showing the calculated values for each iteration of the selected method, as well as whether or not the error is less than a specified tolerance.
       </Typography>
 
