@@ -94,6 +94,15 @@ export default function About(){
           </Grid>
         </Grid>
       </Box>
+
+      <Box sx={{my: 5}}>
+        <Typography variant="h5" gutterBottom>
+          Where to find the source code of this app?
+        </Typography>
+        <Typography paragraph>
+          The source code of this app is available on <a href="https://github.com/lonewanderer27/rootify">Github</a>. Feel free to contribute to this project!
+        </Typography>
+      </Box>
     </Box>
   )
 }
