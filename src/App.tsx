@@ -31,11 +31,17 @@ export const defaultScreenCSS = {
 }
 
 function App() {
-  const [mobileOpen, setMobileOpen] = useState(() => false);
-  const [methodType, setMethodType] = useState<methodTypeEnums | null>(() => methodTypeEnums.Bisection);
-
   const queryParams = new URLSearchParams(window.location.search)
   const enableSecant = queryParams.get("secant") === "true" ? true : false
+
+  const [mobileOpen, setMobileOpen] = useState(() => false);
+  const [methodType, setMethodType] = useState<methodTypeEnums | null>(() => {
+    if (enableSecant) {
+      return methodTypeEnums.Secant
+    } else {
+      return methodTypeEnums.Bisection
+    }
+  });
   
   console.log("SECANT ENABLED: " + enableSecant)
 
