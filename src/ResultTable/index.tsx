@@ -46,6 +46,10 @@ export default function ResultTable(props: {
     },
   }));
 
+  const varHeaders = [
+    'n','a','b','c','d','e','f', ''
+  ]
+
   const headers = {
     bisection: [
       'Iteration',
@@ -76,6 +80,14 @@ export default function ResultTable(props: {
       '< E'
     ]
   }
+
+  const getVarHeader = (): any[] => {
+    if (props.methodType === methodTypeEnums.Secant) {
+      return varHeaders.slice(0, 7).concat([''])
+    } else {
+      return varHeaders.slice(0, 6).concat([''])
+    }
+  }
   
   const getHeader = (): any[] => {
     switch(props.methodType){
@@ -90,6 +102,9 @@ export default function ResultTable(props: {
       <TableContainer>
         <Table sx={{ minWidth: 700 }}>
           <TableHead>
+            <TableRow>
+              {getVarHeader().map((value) => <StyledTableCell key={nanoid()}>{value}</StyledTableCell>)}
+            </TableRow>
             <TableRow>
               {getHeader().map((value) => <StyledTableCell key={nanoid()}>{value}</StyledTableCell>)}
             </TableRow>
