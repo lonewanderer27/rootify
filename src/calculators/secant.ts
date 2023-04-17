@@ -75,7 +75,7 @@ export default function calcSecant(
     }
   }
   
-  const cn = rows.slice(-1)[0].f!
+  const cn = rows.slice(-1)[0].e!
   let f_cn = 0;
   if (funcType === functionTypeEnums.AnyFunction) {
     f_cn = useCustomFunc(rows.slice(-1)[0].c);
