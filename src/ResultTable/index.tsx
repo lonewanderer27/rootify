@@ -99,8 +99,8 @@ export default function ResultTable(props: {
 
   return (
     <Paper sx={{width: '100%', overflow: 'hidden'}}>
-      <TableContainer>
-        <Table sx={{ minWidth: 700 }}>
+      <TableContainer sx={{ maxHeight: '50vh' }}>
+        <Table sx={{ minWidth: 700 }} stickyHeader>
           <TableHead>
             <TableRow>
               {getVarHeader().map((value) => <StyledTableCell key={nanoid()}>{value}</StyledTableCell>)}
