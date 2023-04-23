@@ -55,10 +55,10 @@ export default function PreviewTable(props: {
         <TableBody>
           {props.rows.map((row) => (
             <StyledTableRow key={nanoid()}>
-              <StyledTableCell>{row.n}</StyledTableCell>
-              <StyledTableCell>{row.a}</StyledTableCell>
-              <StyledTableCell>{row.b}</StyledTableCell>
-              <StyledTableCell>{row.error}</StyledTableCell>
+              <StyledTableCell>{!Number.isNaN(row.n) ? row.n : "_____"}</StyledTableCell>
+              <StyledTableCell>{!Number.isNaN(row.a) ? row.a : "_____"}</StyledTableCell>
+              <StyledTableCell>{!Number.isNaN(row.b) ? row.b : "_____"}</StyledTableCell>
+              <StyledTableCell>{!Number.isNaN(row.error) ? row.error : "_____"}</StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>
