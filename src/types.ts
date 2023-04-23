@@ -1,5 +1,18 @@
 import { functionTypeEnums } from "./enums"
 
+export type bisectionTableData = {
+  funcType: functionTypeEnums,
+  standardMethod: boolean,
+  customFunc: string,
+}
+
+export type bisectionTableRows = {
+  a: string,
+  b: string,
+  n: number,
+  error: string
+}[]
+
 export type bisectionData = {
   a: string,
   b: string,
@@ -27,6 +40,28 @@ export type bisectionDataError = {
   error: string;
 }
 
+export type bisectionDataError2 = {
+  func: string,
+}
+
+export type bisectionTableDataError = {
+  a: string,
+  b: string,
+  n: string,
+  func: string,
+  error: string
+}[]
+
+export type newtonTableData = {
+  funcType: functionTypeEnums,
+  customFunc: string,
+  rows: {
+    n: number,
+    xn: string,
+    error: number
+  }[]
+}
+
 export type newtonData = {
   xn: string,
   funcType: functionTypeEnums,
@@ -40,6 +75,13 @@ export type newtonDataError = {
   customFunc: string,
   iterations: string,
   error: string
+}
+
+export type newtonTableDataError = {
+  rows: {
+    xn: string,
+    customFunc: string,
+  }[]
 }
 
 export type secantData = {

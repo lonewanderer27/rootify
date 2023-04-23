@@ -30,7 +30,7 @@ const ListItem = styled('li')(({ theme }) => ({
   margin: theme.spacing(0.5),
 }));
 
-const Item = styled(Paper)(({ theme }) => ({
+export const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
   ...theme.typography.body2,
   padding: theme.spacing(3),
@@ -127,6 +127,8 @@ export default function Bisection() {
   };
 
   const verifyInputs = (data: bisectionData) => {
+    resetDataErrorToBlank();
+
     // Initializing the success variable to true
     let success = true;
 
@@ -198,7 +200,6 @@ export default function Bisection() {
         [name]: type === "checkbox" ? checked : value
       }
       localStorage.setItem("rootify--bisectionData", JSON.stringify(nextState));
-      resetDataErrorToBlank();
       verifyInputs(nextState);
       return nextState
     })

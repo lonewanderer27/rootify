@@ -1,4 +1,4 @@
-import { answerType, rowType, testBisectionIntervalResults } from "../types";
+import { answerType, bisectionTableData, bisectionTableRows, rowType, testBisectionIntervalResults } from "../types";
 
 // Importing necessary modules and types
 import { functionTypeEnums } from "../enums";
@@ -70,6 +70,40 @@ export function testBisectionInterval(
   
   // Return the result of the test
   return response;
+}
+
+
+export function calcBisectionTable(rows: bisectionTableRows, data: bisectionTableData) {
+  let resultRows: answerType[] = []
+
+  rows.forEach((value) => {
+    console.log("Row 1")
+
+    const result = calcBisection(
+      Number(value.a),
+      Number(value.b),
+      data.funcType,
+      data.customFunc,
+      value.n,
+      Number(value.error),
+      true
+    )
+    resultRows.push(result)
+
+    if (isNaN(Number(value.n))) {
+      console.log("n is NaN")
+    } else if (isNaN(Number(value.a))) {
+      console.log("a is NaN")
+    } else if (isNaN(Number(value.b))) {
+      console.log("b is NaN")
+    } else if (isNaN(Number(value.error))) {
+      console.log("error is NaN")
+    } else {
+      console.log("All is good")
+    }
+  })
+
+  return resultRows;
 }
 
 

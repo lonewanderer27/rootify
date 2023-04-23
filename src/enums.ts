@@ -3,6 +3,12 @@ export enum functionTypeEnums {
   AnyFunction = "Any Function"
 }
 
+export enum tableMethodTypeEnums {
+  BisectionTable = "Bisection Table",
+  NewtonTable = "Newton Table",
+  SecantTable = "SecantTable"
+}
+
 export enum methodTypeEnums {
   Bisection = "Bisection",
   Newton = "Newton",

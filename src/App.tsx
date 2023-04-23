@@ -1,7 +1,10 @@
+import { methodTypeEnums, tableMethodTypeEnums } from './enums';
+
 import About from './About';
 import AcUnitIcon from '@mui/icons-material/AcUnit';
 import AppBar from '@mui/material/AppBar';
 import Bisection from './Bisection';
+import { BisectionTable } from './Bisection/table';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import DeviceHubIcon from '@mui/icons-material/DeviceHub';
@@ -20,7 +23,6 @@ import Newton from './Newton';
 import Secant from './Secant';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { methodTypeEnums } from './enums';
 import { useState } from 'react';
 
 export const drawerWidth = 240;
@@ -34,6 +36,7 @@ function App() {
   const queryParams = new URLSearchParams(window.location.search)
   const enableSecant = queryParams.get("secant") === "true" ? true : false
 
+  const [enableTable, setEnableTable] = useState(() => false);
   const [mobileOpen, setMobileOpen] = useState(() => false);
   const [methodType, setMethodType] = useState<methodTypeEnums | null>(() => {
     if (enableSecant) {
@@ -45,6 +48,9 @@ function App() {
   
   console.log("SECANT ENABLED: " + enableSecant)
 
+  const toggleTable = () => setEnableTable((prev) => {
+    return !prev;
+  })
   const switchToBisection = () => setMethodType(() => {
     setMobileOpen(false)
     return methodTypeEnums.Bisection;
@@ -72,6 +78,20 @@ function App() {
     }
   }
   
+  const availableTableMethodTypes = () => {
+    if (enableSecant) {
+      return [
+        tableMethodTypeEnums.BisectionTable, 
+        tableMethodTypeEnums.NewtonTable,
+        tableMethodTypeEnums.SecantTable
+      ]
+    } else {
+      return [
+        tableMethodTypeEnums.BisectionTable, 
+        tableMethodTypeEnums.NewtonTable
+      ]   
+    }
+  }
 
   const drawer = (
     <div>
@@ -82,6 +102,32 @@ function App() {
           <ListItem 
             key={text} 
             onClick={() => {
+              setEnableTable(false)
+              switch(index) {
+                case 0: return switchToBisection();
+                case 1: return switchToNewton();
+                case 2: return switchToSecant();
+              }
+            }}
+          >
+            <ListItemButton>
+              <ListItemIcon>
+                {index === 1 && <ForkRightIcon />}
+                {index === 0 && <AcUnitIcon />}
+                {enableSecant && index === 2 && <DeviceHubIcon />}
+              </ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+      <Divider/>
+      <List>
+        {availableTableMethodTypes().map((text, index) => (
+          <ListItem
+            key={text}
+            onClick={() => {
+              setEnableTable(true)
               switch(index) {
                 case 0: return switchToBisection();
                 case 1: return switchToNewton();
@@ -117,6 +163,8 @@ function App() {
   const container = document.body;
 
   console.log(`Drawer is ${mobileOpen ? "open" : "closed"}`)
+  console.log("Active method: " + methodType)
+  console.log("Table enabled: " + enableTable)
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -141,8 +189,9 @@ function App() {
           <img src="/logo.png" style={{width: "40px", height: "auto", marginRight: "20px"}} />
           <Typography variant="h6" noWrap component="div" sx={{marginRight: "auto"}}>
             {methodType === methodTypeEnums.Bisection && "Bisection"}
-            {methodType === methodTypeEnums.Newton && "Newton"} 
+            {methodType === methodTypeEnums.Newton && "Newton"}
             {methodType === methodTypeEnums.Secant && "Secant"}
+            {enableTable === true && " Table"}
             {methodType === null ? "About Rootify" : " Method"}
           </Typography>
         </Toolbar>
@@ -180,10 +229,18 @@ function App() {
         </Drawer>
       </Box>
 
-      {methodType === methodTypeEnums.Bisection && <Bisection />}
-      {methodType === methodTypeEnums.Newton && <Newton />}
-      {methodType === methodTypeEnums.Secant && <Secant />}
-      {methodType === null && <About/>}
+      {methodType === methodTypeEnums.Bisection && enableTable === false &&
+        <Bisection />}
+      {methodType === methodTypeEnums.Bisection && enableTable === true &&
+        <BisectionTable />}
+      {methodType === methodTypeEnums.Newton && enableTable === false &&
+        <Newton />}
+      {/* {methodType === methodTypeEnums.Newton && enableTable === true &&
+        <NewtonTable />} */}
+      {methodType === methodTypeEnums.Secant && enableTable === false &&
+        <Secant />}
+      {methodType === null && 
+        <About/>}
     </Box>
   );
 }
