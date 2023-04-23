@@ -4,7 +4,7 @@ import About from './About';
 import AcUnitIcon from '@mui/icons-material/AcUnit';
 import AppBar from '@mui/material/AppBar';
 import Bisection from './Bisection';
-import { BisectionTable } from './Bisection/table';
+import { BisectionRowsTable } from './Bisection/rowsTable';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import DeviceHubIcon from '@mui/icons-material/DeviceHub';
@@ -29,7 +29,7 @@ export const drawerWidth = 240;
 export const inputWidth = '45vw';
 
 export const defaultScreenCSS = {
-  p: { xs: 2, md: 10, lg: 20}
+  p: { xs: 2, md: 5, lg: 10}
 }
 
 function App() {
@@ -232,7 +232,7 @@ function App() {
       {methodType === methodTypeEnums.Bisection && enableTable === false &&
         <Bisection />}
       {methodType === methodTypeEnums.Bisection && enableTable === true &&
-        <BisectionTable />}
+        <BisectionRowsTable />}
       {methodType === methodTypeEnums.Newton && enableTable === false &&
         <Newton />}
       {/* {methodType === methodTypeEnums.Newton && enableTable === true &&

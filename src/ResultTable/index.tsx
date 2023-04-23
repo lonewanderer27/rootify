@@ -52,7 +52,7 @@ export default function ResultTable(props: {
 
   const headers = {
     bisection: [
-      'Iteration',
+      'n',
       'a',
       'b',
       'c = (a + b) / 2',
@@ -61,7 +61,7 @@ export default function ResultTable(props: {
       '< E'
     ],
     newton: [
-      'Iteration',
+      'n',
       'Xn',
       props.funcType === functionTypeEnums.LogFunction ? "f(Xn) = ln(x+1)" : replacefx(props.customFunc, 'Xn'),
       props.funcType === functionTypeEnums.LogFunction ? "f'(Xn) = 1/(x+1)" :  `f'(Xn) = ${props.firstDerivativeFunc}`,
@@ -70,7 +70,7 @@ export default function ResultTable(props: {
       '< E'
     ],
     secant: [
-      'Iteration',
+      'n',
       'Xn-1',
       'Xn',
       props.funcType === functionTypeEnums.LogFunction ? "f(Xn-1) = ln(x+1)" : replacefx(props.customFunc, 'Xn-1'),

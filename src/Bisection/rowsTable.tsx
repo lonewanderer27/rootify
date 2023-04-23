@@ -3,6 +3,7 @@ import { PlusOne, PlusOneOutlined } from "@mui/icons-material";
 import { bisectionDataError2, bisectionTableData, bisectionTableDataError, bisectionTableRows } from "../types";
 import { calcBisectionTable, testBisectionInterval } from "../calculators/bisection";
 import { defaultScreenCSS, drawerWidth, inputWidth } from "../App";
+import { functionTypeEnums, methodTypeEnums } from "../enums";
 import { hasInvalidCharacters, invalidError } from "../Checkers";
 import { useRef, useState } from "react";
 
@@ -11,14 +12,14 @@ import { Item } from ".";
 import PreviewTable from "../PreviewTable";
 import RedoBtn from "../Buttons/RedoBtn";
 import RemoveIcon from '@mui/icons-material/Remove';
+import { RowsResultTable } from "../ResultTable/rowsResultTable";
 import SolveBtn from "../Buttons/SolveBtn";
 import Typography from "@mui/material/Typography";
-import { functionTypeEnums } from "../enums";
 import { nanoid } from "nanoid";
 import { testFunc } from "../calculators/misc";
 import { useEffect } from "react";
 
-export function BisectionTable() {
+export function BisectionRowsTable() {
   const defaultRow = {
     a: "",
     b: "",
@@ -57,17 +58,22 @@ export function BisectionTable() {
   const currentInputRef = useRef(null);
 
   useEffect(() => {
+    const bisectionTableRows = localStorage.getItem("rootify-bisectionTableRows");
+    if (bisectionTableRows !== null) {
+      setRows(() => JSON.parse(bisectionTableRows))
+    }
+
     const bisectionBasicInput = localStorage.getItem("rootify--bisectionTableBasicInput");
     if (bisectionBasicInput !== null) {
       setBasicInputRows(() => bisectionBasicInput);
     } else {
       setBasicInputRows(() => "0;0;0;0;\n0;0;0;0;\n0;0;0;0;\n0;0;0;0;\n0;0;0;0;");
     }
+    
     const bisectionData = localStorage.getItem("rootify--bisectionTableData");
     if (bisectionData !== null) {
       setData(() => JSON.parse(bisectionData));
     }
-
   }, [])
 
   const resetErrors = () => {
@@ -135,11 +141,8 @@ export function BisectionTable() {
   ]
 
   useEffect(() => {
-    if (currentInputRef.current !== null) {
-      console.log(`Focusing input on ${currentInputRef.current?.name}`)
-      currentInputRef.current?.focus();
-    }
-  }, [data, rows])
+    localStorage.setItem("rootify--bisectionTableData", JSON.stringify(data))
+  }, [data])
 
   const toggleUseBasicInput = () => setUseBasicInput((prev) => !prev)
 
@@ -168,6 +171,7 @@ export function BisectionTable() {
       localStorage.setItem("rootify--bisectionTableBasicInput", value);
 
       setRows(() => transformed);
+      localStorage.setItem("rootify--bisectionTableRows", JSON.stringify(transformed))
     } catch (err) {
       setBIHasError(() => true)
       console.log("Error transforming basic input data")
@@ -276,9 +280,15 @@ export function BisectionTable() {
 
     console.log("TABLE RESULT: ")
     console.table(result)
+
+    return <RowsResultTable 
+      funcType={data.funcType}
+      customFunc={data.customFunc}
+      bisectionRows={result}
+      methodType={methodTypeEnums.Bisection}
+    />
   }
 
-  showAnswer && getResultTable()
 
   const tableBodyRef = useRef(null);
 
@@ -290,7 +300,7 @@ export function BisectionTable() {
   return (
     <Box
       component="main"
-      sx={{ flexGrow: 1, width: {xs: `calc(100% - ${drawerWidth}px)` }, ...defaultScreenCSS }}
+      sx={{ flexGrow: 1, width: {xs: `calc(100% - ${drawerWidth}px)` }, p: {xs: 2} }}
     >
       <Toolbar/>
       <Stack spacing={2}>
@@ -346,122 +356,128 @@ export function BisectionTable() {
             </>
           </Box>         
         </Item>
-        <Item variant="outlined">
-          <Typography variant="h6" color="InfoText">Fill in the known values in the table</Typography>
-          {useBasicInput === false && <Paper sx={{width: '100%', overflow: 'hidden'}}>
-            <TableContainer>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    {headers.map((header) => (<StyledTableCell key={nanoid()}>{header}</StyledTableCell>))}
-                  </TableRow>
-                </TableHead>
-                <TableBody ref={tableBodyRef}>
-                  {rows.map((row, index) => (
-                    <Slide key={`${index}-slide`} direction="up" in={true} container={tableBodyRef.current} mountOnEnter unmountOnExit>
-                      <StyledTableRow key={`${index}-trow`}>
-                        <StyledTableCell key={`${index}-tcell-column1`}>
-                          <TextField
-                            ref={currentInputRef.current !== null && `${index}-a` === currentInputRef.current.name ? currentInputRef : null}
-                            error={tableDataError[index].n !== "" && true}
-                            helperText={tableDataError[index].n !== "" && tableDataError[index].n}
-                            disabled={showAnswer}
-                            key={`${index}-n`}
-                            name={`${index}-n`} 
-                            type="number"
-                            id={`${index}-n`}
-                            label="Value of iteration"
-                            variant="standard"
-                            value={row.n}
-                            onChange={handleChange}
-                            onFocus={(e) => {currentInputRef.current = e.target}}
-                          />
-                        </StyledTableCell>
-                        <StyledTableCell key={`${index}-tcell-column2`}>
-                          <TextField
-                            ref={currentInputRef.current !== null && `${index}-a` === currentInputRef.current.name ? currentInputRef : null}
-                            error={tableDataError[index].a !== "" && true}
-                            helperText={tableDataError[index].a !== "" && tableDataError[index].a}
-                            disabled={showAnswer}
-                            key={`${index}-a`}
-                            name={`${index}-a`} 
-                            id={`${index}-a`}
-                            label="Value of a"
-                            value={row.a}
-                            variant="standard"
-                            onChange={handleChange}
-                            onFocus={(e) => {currentInputRef.current = e.target}}
-                          />
-                        </StyledTableCell>
-                        <StyledTableCell key={`${index}-tcell-column3`}>
-                          <TextField
-                            ref={currentInputRef.current !== null && `${index}-a` === currentInputRef.current.name ? currentInputRef : null}
-                            error={tableDataError[index].b !== "" && true}
-                            helperText={tableDataError[index].b !== "" && tableDataError[index].b}
-                            disabled={showAnswer}
-                            key={`${index}-b`}
-                            name={`${index}-b`}
-                            id={`${index}-b`}
-                            label="Value of b"
-                            value={row.b}
-                            data-index={`${index}`} 
-                            variant="standard"
-                            onChange={handleChange}
-                            onFocus={(e) => {currentInputRef.current = e.target}}
-                          />
-                        </StyledTableCell>
-                        <StyledTableCell key={`${index}-tcell-column4`}>
-                          <TextField
-                            ref={currentInputRef.current !== null && `${index}-a` === currentInputRef.current.name ? currentInputRef : null}
-                            error={tableDataError[index].error !== "" && true}
-                            helperText={tableDataError[index].error !== "" && tableDataError[index].error}
-                            disabled={showAnswer}
-                            key={`${index}-error`}
-                            name={`${index}-error`} 
-                            id={`${index}-error`}
-                            label="Value of error"
-                            value={row.error}
-                            data-index={`${index}`} 
-                            variant="standard"
-                            onChange={handleChange}
-                            onFocus={(e) => {currentInputRef.current = e.target}}
-                          />
-                        </StyledTableCell>
-                        <StyledTableCell key={`${index}-tcell-column5`}>
-                          {index !== 0 && <Button 
-                            color="warning" 
-                            variant="contained" 
-                            onClick={() => removeRow(index)}
-                          >
-                            <RemoveIcon key={`${index}-removeIcon`}/>
-                          </Button>}
-                        </StyledTableCell>
-                      </StyledTableRow>
-                    </Slide>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            <Collapse in={!showAnswer}>
-              <Button variant="contained" endIcon={<PlusOneOutlined/>} onClick={() => addRow()} sx={{m: 4}}>
-                Add Row
-              </Button>
-            </Collapse>
-          </Paper>}
-          {useBasicInput === true && <>
-            <TextField 
-              error={BIHasError}
-              value={basicInputRows}
-              helperText={BIHasError && "Please enter the values in the correct format"}
-              label="n; a; b; error;"
-              multiline
-              rows={5}
-              variant="standard"
-              onChange={handleBasicInputChange}
-            />
-            <PreviewTable rows={rows} />
-          </>}
-        </Item>
+        <Collapse in={!showAnswer}>
+          <Item variant="outlined">
+            <Typography variant="h6" color="InfoText">Fill in the known values in the table</Typography>
+            {useBasicInput === false && <Paper sx={{width: '100%', overflow: 'hidden'}}>
+              <TableContainer>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      {headers.map((header) => (<StyledTableCell key={nanoid()}>{header}</StyledTableCell>))}
+                    </TableRow>
+                  </TableHead>
+                  <TableBody ref={tableBodyRef}>
+                    {rows.map((row, index) => (
+                      <Slide key={`${index}-slide`} direction="up" in={true} container={tableBodyRef.current} mountOnEnter unmountOnExit>
+                        <StyledTableRow key={`${index}-trow`}>
+                          <StyledTableCell key={`${index}-tcell-column1`}>
+                            <TextField
+                              ref={currentInputRef.current !== null && `${index}-a` === currentInputRef.current.name ? currentInputRef : null}
+                              error={tableDataError[index].n !== "" && true}
+                              helperText={tableDataError[index].n !== "" && tableDataError[index].n}
+                              disabled={showAnswer}
+                              key={`${index}-n`}
+                              name={`${index}-n`} 
+                              type="number"
+                              id={`${index}-n`}
+                              label="Value of iteration"
+                              variant="standard"
+                              value={row.n}
+                              onChange={handleChange}
+                              onFocus={(e) => {currentInputRef.current = e.target}}
+                            />
+                          </StyledTableCell>
+                          <StyledTableCell key={`${index}-tcell-column2`}>
+                            <TextField
+                              ref={currentInputRef.current !== null && `${index}-a` === currentInputRef.current.name ? currentInputRef : null}
+                              error={tableDataError[index].a !== "" && true}
+                              helperText={tableDataError[index].a !== "" && tableDataError[index].a}
+                              disabled={showAnswer}
+                              key={`${index}-a`}
+                              name={`${index}-a`} 
+                              id={`${index}-a`}
+                              label="Value of a"
+                              value={row.a}
+                              variant="standard"
+                              onChange={handleChange}
+                              onFocus={(e) => {currentInputRef.current = e.target}}
+                            />
+                          </StyledTableCell>
+                          <StyledTableCell key={`${index}-tcell-column3`}>
+                            <TextField
+                              ref={currentInputRef.current !== null && `${index}-a` === currentInputRef.current.name ? currentInputRef : null}
+                              error={tableDataError[index].b !== "" && true}
+                              helperText={tableDataError[index].b !== "" && tableDataError[index].b}
+                              disabled={showAnswer}
+                              key={`${index}-b`}
+                              name={`${index}-b`}
+                              id={`${index}-b`}
+                              label="Value of b"
+                              value={row.b}
+                              data-index={`${index}`} 
+                              variant="standard"
+                              onChange={handleChange}
+                              onFocus={(e) => {currentInputRef.current = e.target}}
+                            />
+                          </StyledTableCell>
+                          <StyledTableCell key={`${index}-tcell-column4`}>
+                            <TextField
+                              ref={currentInputRef.current !== null && `${index}-a` === currentInputRef.current.name ? currentInputRef : null}
+                              error={tableDataError[index].error !== "" && true}
+                              helperText={tableDataError[index].error !== "" && tableDataError[index].error}
+                              disabled={showAnswer}
+                              key={`${index}-error`}
+                              name={`${index}-error`} 
+                              id={`${index}-error`}
+                              label="Value of error"
+                              value={row.error}
+                              data-index={`${index}`} 
+                              variant="standard"
+                              onChange={handleChange}
+                              onFocus={(e) => {currentInputRef.current = e.target}}
+                            />
+                          </StyledTableCell>
+                          <StyledTableCell key={`${index}-tcell-column5`}>
+                            {index !== 0 && <Button 
+                              color="warning" 
+                              variant="contained" 
+                              onClick={() => removeRow(index)}
+                            >
+                              <RemoveIcon key={`${index}-removeIcon`}/>
+                            </Button>}
+                          </StyledTableCell>
+                        </StyledTableRow>
+                      </Slide>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              <Collapse in={!showAnswer}>
+                <Button variant="contained" endIcon={<PlusOneOutlined/>} onClick={() => addRow()} sx={{m: 4}}>
+                  Add Row
+                </Button>
+              </Collapse>
+            </Paper>}
+            {useBasicInput === true && <>
+              <TextField 
+                disabled={showAnswer}
+                error={BIHasError}
+                value={basicInputRows}
+                helperText={BIHasError && "Please enter the values in the correct format"}
+                label="n; a; b; error;"
+                multiline
+                rows={5}
+                variant="standard"
+                onChange={handleBasicInputChange}
+              />
+              <PreviewTable rows={rows} />
+            </>}
+          </Item>
+        </Collapse>
+        <Collapse in={showAnswer}>
+          {showAnswer && getResultTable()}
+        </Collapse>
         <Collapse in={!showAnswer}>
           <SolveBtn handleClick={toggleShowAnswer} />
         </Collapse>
