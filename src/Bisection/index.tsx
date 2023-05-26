@@ -160,10 +160,10 @@ export default function Bisection() {
       success = false;
     }
     
-    // Checking if 'iterations' is less than or equal to zero or greater than 100
-    if (data.iterations <= 0 || data.iterations > 100) {
+    // Checking if 'iterations' is less than or equal to zero
+    if (data.iterations <= 0) {
       // If 'iterations' is invalid, set the error message and set success to false
-      setDataError((prev) => ({...prev, iterations: "Needs to be greater than zero or less than 100"}))
+      setDataError((prev) => ({...prev, iterations: "Needs to be greater than zero"}))
       success = false;
     }
 
@@ -213,7 +213,8 @@ export default function Bisection() {
       data.customFunc,
       data.iterations,
       parseFloat(data.error),
-      data.standardMethod)
+      data.standardMethod
+    )
     
     return (
       <ResultTable 
@@ -224,6 +225,7 @@ export default function Bisection() {
         cn={result.cn}
         f_cn={result.f_cn}
         displayOneAnswer={displayOneAnswer}
+        repeating={result.repeating}
       />
     )
   }

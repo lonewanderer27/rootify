@@ -104,7 +104,8 @@ export type secantDataError = {
 export type answerType = {
   rows: rowsType,
   cn: number,
-  f_cn: number
+  f_cn: number,
+  repeating: boolean
 }
 
 export type rowType = {
@@ -115,7 +116,7 @@ export type rowType = {
   d: number,
   e: number,
   f?: number,
-  less_than_error: boolean
+  less_than_error: boolean,
 }
 
 export type rowsType = rowType[]

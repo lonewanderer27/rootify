@@ -26,6 +26,8 @@ export default function calcSecant(
 
   let temp_less_than_error = temp_e < error;
 
+  let repeating = false;
+
   let i = 0;
   while (i < iterations) {
     console.log(`Loop ${i + 1}`);
@@ -73,6 +75,35 @@ export default function calcSecant(
     if (temp_less_than_error) {
       break;
     }
+
+    // If the f(c) is NaN or Infinity, break out of the loop
+    if (Number.isNaN(temp_d) || temp_d == Infinity){
+      repeating = true;
+      break;
+    }
+
+    // If the number of rows is greater than 3, then we start checking the last three values of f(c)
+    // if they're the same 
+    if (rows.length >= 3) {
+      console.log("checking if the last 3 f(c) are the same");
+      
+      const lastThreeValues = rows.slice(-3).map(row => {
+        return row.d!;
+      });
+
+      const allSameValue = lastThreeValues.every(value =>
+        value === lastThreeValues[0]
+      );
+
+      if (allSameValue) {
+        // The last three values of f(c) are the same
+        // Break the loop or exit the program
+        console.log("Loop terminated");
+        console.log(`Since the last 3 f(c) are the same which is ${lastThreeValues[0]}}`)
+        repeating = true;
+        break;
+      }
+    }
   }
   
   const cn = rows.slice(-1)[0].e!
@@ -86,6 +117,7 @@ export default function calcSecant(
   return {
     cn: cn,
     f_cn: f_cn,
-    rows: rows
+    rows: rows,
+    repeating: repeating
   }
 }

@@ -1,9 +1,9 @@
 import { Alert, AlertTitle, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { functionTypeEnums, methodTypeEnums } from "../enums";
+import math, { MathNode } from "mathjs";
 
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
-import { MathNode } from "mathjs";
 import { nanoid } from 'nanoid'
 import { rowsType } from "../types";
 import { styled } from "@mui/material";
@@ -22,6 +22,7 @@ export default function ResultTable(props: {
   customFunc?: string,
   firstDerivativeFunc?: MathNode,
   methodType: methodTypeEnums,
+  repeating?: boolean
 }){
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -141,6 +142,11 @@ export default function ResultTable(props: {
           {}
         </Table>
       </TableContainer>
+      {props.rows.slice(-1)[0].less_than_error === false && props.repeating === true &&
+      <Alert severity="warning">
+        <AlertTitle>Warning</AlertTitle>
+        Iterations stopped prematurely since repeated values detected on iteration {props.rows.length}.
+      </Alert>}
       {props.rows.slice(-1)[0].less_than_error === false && 
       <Alert severity="info">
         <AlertTitle>Info</AlertTitle>
@@ -152,7 +158,7 @@ export default function ResultTable(props: {
         <AlertTitle>Less than E at iteration {props.rows.length}!</AlertTitle><br/>
         <AlertTitle sx={{fontWeight: "bold"}}>Final Answer: </AlertTitle>
           Cn = {props.cn}<br/>
-          f(Cn) = {props.f_cn}
+          f(Cn) = {props.f_cn}<br/>
       </Alert>}
     </Paper>
     
