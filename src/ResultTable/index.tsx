@@ -147,7 +147,7 @@ export default function ResultTable(props: {
         <AlertTitle>Warning</AlertTitle>
         Iterations stopped prematurely since repeated values detected on iteration {props.rows.length}.
       </Alert>}
-      {props.rows.slice(-1)[0].less_than_error === false && 
+      {props.rows.slice(-1)[0].less_than_error === false && props.repeating === false &&
       <Alert severity="info">
         <AlertTitle>Info</AlertTitle>
         Less than E is still not true on last iteration ({props.rows.length}). <br/><br/>
