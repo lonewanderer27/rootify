@@ -39,6 +39,8 @@ export default function calcNewton(
   let temp_e = 0;             // Absolute error
   let temp_less_than_error = temp_e < error; // Boolean value indicating whether error is less than tolerance
 
+  let repeating = false;
+
   // Loop for a specified number of iterations or until the absolute error is less than the tolerance
   let i = 0
   while (i < iterations){
@@ -96,6 +98,31 @@ export default function calcNewton(
     if (temp_less_than_error) {
       break;
     }
+
+    // If the f(c) is NaN or Infinity, break out of the loop
+    if (Number.isNaN(temp_d) || temp_d == Infinity){
+      repeating = true;
+      break;
+    }
+
+    // If the number of rows is greater than 3, then we start checking the last three values of f(c)
+    // if they're the same 
+    if (rows.length >= 3) {
+      const lastThreeValues = rows.slice(-3).map(row => row.d);
+
+      const allSameValue = lastThreeValues.every(value =>
+        value === lastThreeValues[0]
+      );
+
+      if (allSameValue) {
+        // The last three values of f(c) are the same
+        // Break the loop or exit the program
+        console.log("Loop terminated");
+        console.log(`Since the last 3 f(c) are the same which is ${lastThreeValues[0]}}`)
+        repeating = true;
+        break;
+      }
+    }
   }
 
   // compute the final answers
@@ -111,6 +138,7 @@ export default function calcNewton(
   return {
     cn: cn,
     f_cn: f_cn,
-    rows: rows
+    rows: rows,
+    repeating: repeating
   }
 }

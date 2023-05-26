@@ -392,6 +392,13 @@ export function calcBisectionOld(
 
     // If the absolute difference is less than the desired error, break out of the loop
     if (temp_less_than_error) {
+      repeating = true
+      break;
+    }
+
+    // If the f(c) is NaN or Infinity, break out of the loop
+    if (Number.isNaN(temp_d) || temp_d == Infinity){
+      repeating = true;
       break;
     }
 
